@@ -2,6 +2,63 @@
 <PageTitle>Add a Habit</PageTitle>
 <h3>Add a Habit</h3>
 
-@code {
+<EditForm Model="@Habit" OnValidSubmit="CreateHabit">
+    <FluentValidationValidator />
+    <Blazorise.ValidationSummary />
+    <div class="form-group row">
+        <label for="@Habit.What" class="col-sm-12 col-form-label">What Result do you want?</label>
+        <div class="col-sm-12">
+            <TextEdit @bind-Text="@Habit.What" placeholder="e.g. Save $10,000 in my bank account"></TextEdit>
+            <ValidationMessage For="@(() => Habit.What)" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="@Habit.Why" class="col-sm-12 col-form-label">Why do you want the result?</label>
+        <div class="col-sm-12">
+            <MemoEdit @bind-Text="@Habit.Why" placeholder="e.g. I want to go on a vacation with my family"></MemoEdit>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="@Habit.StartDate" class="col-sm-12 col-form-label">When will you start?</label>
+        <div class="col-sm-12">
+            <DateEdit TValue="DateTime" @bind-Date="@Habit.StartDate" Min="DateTime.Today"></DateEdit>
+            <ValidationMessage For="@(() => Habit.StartDate)" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="@Habit.Category" class="col-sm-12 col-form-label">Category</label>
+        <div for="@Habit.Category" class="col-sm-12 col-form-label">
+            <Select @bind-SelectedValue="@Habit.Category">
+                <SelectItem Value="@string.Empty">--Select Category--</SelectItem>
+                @foreach (var category in Enum.GetValues<HabitCategory>())
+                {
+                    <SelectItem Value="@category">@category</SelectItem>
+                }
+            </Select>
+            <ValidationMessage For="@(() => Habit.Category)" />
+        </div>
+    </div>
+    @if (Habit.Category == HabitCategory.Other)
+    {
+        <div class="form-group row">
+            <label for="@Habit.CategoryDescription" class="col-sm-12 col-form-label">Describe the category</label>
+            <div class="col-sm-12">
+                <InputText @bind-Value="@Habit.CategoryDescription" class="form-control" placeholder="e.g. Service"></InputText>
+                <ValidationMessage For="@(() => Habit.CategoryDescription)" />
+            </div>
+        </div>
+    }
+    <div class="form-field">
+        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-primary">Cancel</button>
+    </div>
+</EditForm>
 
+@code {
+    public Habit Habit { get; set; } = HabitState.CurrentHabit;
+
+    void CreateHabit()
+    {
+        var newHabit = Habit;
+    }
 }

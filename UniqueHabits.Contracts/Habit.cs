@@ -1,0 +1,15 @@
+﻿using UniqueHabits.Contracts.Enums;
+
+namespace UniqueHabits.Contracts
+{
+    public class Habit
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string What { get; set; }
+        public string Why { get; set; }
+        public DateTime StartDate { get; set; } = DateTime.Today;
+        public HabitCategory? Category { get; set; }
+        public string CategoryDescription { get; set; }
+
+    }
+}
