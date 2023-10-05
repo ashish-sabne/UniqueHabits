@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueHabits.UI", "UniqueHabits.UI\UniqueHabits.UI.csproj", "{4A81B562-DE26-4940-91B6-6DEE9AEBE7D9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueHabit.Domain", "UniqueHabit.Domain\UniqueHabit.Domain.csproj", "{407CC1C6-4FFA-4841-A9A8-179CF0E1DA9F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnqiueHabits.Client", "UnqiueHabits.Client\UnqiueHabits.Client.csproj", "{F6DAC0EB-9BBB-4C38-B6E6-040546CD2A51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4A81B562-DE26-4940-91B6-6DEE9AEBE7D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A81B562-DE26-4940-91B6-6DEE9AEBE7D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A81B562-DE26-4940-91B6-6DEE9AEBE7D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A81B562-DE26-4940-91B6-6DEE9AEBE7D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{407CC1C6-4FFA-4841-A9A8-179CF0E1DA9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{407CC1C6-4FFA-4841-A9A8-179CF0E1DA9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{407CC1C6-4FFA-4841-A9A8-179CF0E1DA9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{407CC1C6-4FFA-4841-A9A8-179CF0E1DA9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6DAC0EB-9BBB-4C38-B6E6-040546CD2A51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6DAC0EB-9BBB-4C38-B6E6-040546CD2A51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6DAC0EB-9BBB-4C38-B6E6-040546CD2A51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6DAC0EB-9BBB-4C38-B6E6-040546CD2A51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

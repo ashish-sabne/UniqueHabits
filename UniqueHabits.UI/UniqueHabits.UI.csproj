@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UniqueHabits.Data\UniqueHabits.Data.csproj" />
+    <ProjectReference Include="..\UniqueHabits.Shared\UniqueHabits.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

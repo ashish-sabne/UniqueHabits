@@ -1,0 +1,43 @@
+﻿@page "/habits"
+<PageTitle>My Habits</PageTitle>
+
+@inject IHabitService HabitService
+<h3>My Habits</h3>
+
+@if (habits == null || !habits.Any())
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">What</th>
+                <th scope="col">Why</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var habit in habits)
+            {
+                <tr>
+                    <td>@habit.What</td>
+                    <td>@habit.Why</td>
+                    <td>@habit.StartDate.ToShortDateString()</td>
+                    <td>@habit.Category.ToString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Habit> habits;
+
+    protected override async Task OnInitializedAsync()
+    {
+        habits = HabitService.GetHabits();
+    }
+}

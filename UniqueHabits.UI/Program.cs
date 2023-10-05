@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using UniqueHabits.Data;
+using UniqueHabits.Shared;
 using UniqueHabits.UI.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSingleton<IHabitService, HabitService>();
+builder.Services.AddSingleton<HabitState>();
 
 var app = builder.Build();
 
