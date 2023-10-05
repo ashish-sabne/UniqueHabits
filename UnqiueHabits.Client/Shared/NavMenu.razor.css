@@ -8,8 +8,12 @@
 }
 
 .navbar-brand {
-    font-size: 1.1rem;
+    font-size: 2rem;
 }
+
+    .navbar-brand .material-icons {
+        font-size: 2rem;
+    }
 
 .oi {
     width: 2rem;
