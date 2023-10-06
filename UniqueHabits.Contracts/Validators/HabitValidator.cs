@@ -6,7 +6,8 @@ namespace UniqueHabits.Contracts.Validators
     {
         public HabitValidator() 
         {
-            RuleFor(h => h.What).NotEmpty();
+            RuleFor(h => h.SystemName).NotEmpty();
+            RuleFor(h => h.MeasurableResult).NotEmpty();
             RuleFor(h => h.StartDate).NotEmpty().GreaterThanOrEqualTo(DateTime.Today);
             RuleFor(h => h.Category).NotEmpty();
             RuleFor(h => h.CategoryDescription).NotEmpty()

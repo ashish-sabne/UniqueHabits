@@ -1,9 +1,60 @@
 ﻿@page "/"
+@inject HabitService HabitService
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@if (!Habits.Any())
+{
+    <Card>
+        <CardBody>
+            <CardTitle Size="5">
+                You have not recorded any habits so far
+            </CardTitle>
+            <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
+                This app allows you to track a habit according to Dave Crenshaw&apos;s LinkedIn Learning course "Unique Habits: Be Successful Your Own Way".
+            </CardText>
+            <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="/add-habit">
+                Add a Habit <Icon Name="IconName.ArrowRight" />
+            </Button>
+            <Button Color="Color.Secondary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="https://www.linkedin.com/learning/unique-habits-be-successful-your-own-way?u=2254210" Target="Target.Blank">
+                Watch Course <Icon Name="IconName.ArrowRight" />
+            </Button>
+        </CardBody>
+    </Card>
+}
+else
+{
+    <CardDeck>
+    @foreach (var habit in Habits)
+    {
+        <Card>
+            <CardBody>
+                <CardTitle Size="5">
+                    @habit.SystemName
+                </CardTitle>
+                <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
+                    @habit.MeasurableResult
+                </CardText>
+                <Button Color="Color.Primary" Margin="Margin.Is2.FromTop">
+                    Read more <Icon Name="IconName.ArrowRight" />
+                </Button>
+            </CardBody>
+        </Card>
+    }
+    </CardDeck>
+}
+
+@*<SurveyPrompt Title="How is Blazor working for you?" />*@
+
+@code {
+    List<Habit> Habits = new();
+    protected override void OnInitialized()
+    {
+        Habits = HabitService.GetHabits();
+        base.OnInitialized();
+    }
+}
