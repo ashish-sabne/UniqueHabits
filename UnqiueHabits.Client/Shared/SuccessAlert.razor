@@ -1,0 +1,26 @@
+﻿<Alert @ref="alertRef" Color="Color.Success" Visible>
+    <AlertMessage>@Message</AlertMessage>
+    <AlertDescription>@Description</AlertDescription>
+    <CloseButton />
+</Alert>
+
+@code {
+    [Parameter]
+    public string Message { get; set; } = "Well done!";
+
+    [Parameter]
+    public string Description { get; set; } = "";
+
+    [Parameter]
+    public int ShowFor { get; set; } = 5000;
+
+    private Alert alertRef;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(ShowFor);
+        await alertRef.Hide();
+
+        await base.OnInitializedAsync();
+    }
+}

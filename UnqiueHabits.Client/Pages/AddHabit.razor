@@ -1,75 +1,108 @@
 ﻿@page "/add-habit"
 @inject HabitService HabitService
 @inject NavigationManager Navigation
-<PageTitle>Add a Habit</PageTitle>
-<h3>Add a Habit</h3>
 
-<EditForm Model="@Habit" OnValidSubmit="CreateHabit">
-    <FluentValidationValidator />
-    <Blazorise.ValidationSummary />
-    <div class="form-group row">
-        <label for="@Habit.MeasurableResult" class="col-sm-12 col-form-label">System Name</label>
-        <div class="col-sm-12">
-            <TextEdit @bind-Text="@Habit.SystemName" placeholder="e.g. Improve my bank balance"></TextEdit>
-            <ValidationMessage For="@(() => Habit.SystemName)" />
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@Habit.MeasurableResult" class="col-sm-12 col-form-label">What Measurable Result do you want?</label>
-        <div class="col-sm-12">
-            <TextEdit @bind-Text="@Habit.MeasurableResult" placeholder="e.g. Save $10,000 in my bank account"></TextEdit>
-            <ValidationMessage For="@(() => Habit.MeasurableResult)" />
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@Habit.Why" class="col-sm-12 col-form-label">Why do you want the result?</label>
-        <div class="col-sm-12">
-            <MemoEdit @bind-Text="@Habit.Why" placeholder="e.g. I want to attain financial freedom to spend more time with family"></MemoEdit>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@Habit.StartDate" class="col-sm-12 col-form-label">When will you start?</label>
-        <div class="col-sm-12">
-            <DateEdit TValue="DateTime" @bind-Date="@Habit.StartDate" Min="DateTime.Today"></DateEdit>
-            <ValidationMessage For="@(() => Habit.StartDate)" />
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@Habit.Category" class="col-sm-12 col-form-label">Category</label>
-        <div for="@Habit.Category" class="col-sm-12 col-form-label">
-            <Select @bind-SelectedValue="@Habit.Category">
-                <SelectItem Value="@string.Empty">--Select Category--</SelectItem>
-                @foreach (var category in Enum.GetValues<HabitCategory>())
-                {
-                    <SelectItem Value="@category">@category</SelectItem>
-                }
-            </Select>
-            <ValidationMessage For="@(() => Habit.Category)" />
-        </div>
-    </div>
-    @if (Habit.Category == HabitCategory.Other)
-    {
-        <div class="form-group row">
-            <label for="@Habit.CategoryDescription" class="col-sm-12 col-form-label">Describe the category</label>
-            <div class="col-sm-12">
-                <TextEdit @bind-Value="@Habit.CategoryDescription" class="form-control" placeholder="e.g. Service"></TextEdit>
-                <ValidationMessage For="@(() => Habit.CategoryDescription)" />
-            </div>
-        </div>
-    }
-    <div class="form-field">
-        <Button Color="Color.Primary" Type="ButtonType.Submit">Submit</Button>
-        <Button Color="Color.Light" Type="ButtonType.Reset">Cancel</Button>
-    </div>
-</EditForm>
+<PageTitle>Add Habit</PageTitle>
+
+<h3>Add Habit</h3>
+
+<Steps @ref="stepsRef" @bind-SelectedStep="@selectedStep" NavigationAllowed="NavigationAllowed">
+    <Items>
+        <Step Name="Start">
+            <Marker>
+                <Icon Name="IconName.BirthdayCake"></Icon>
+            </Marker>
+            <Caption>Start a Habit</Caption>
+        </Step>
+        <Step Name="Details">
+            <Marker>
+                <Icon Name="IconName.List"></Icon>
+            </Marker>
+            <Caption>Enter Habit Details</Caption>
+        </Step>
+        <Step Name="Review">
+            <Marker>
+                <Icon Name="IconName.CheckDouble"></Icon>
+            </Marker>
+            <Caption>Review Habit Details</Caption>
+        </Step>
+    </Items>
+    <Content>
+        <StepPanel Name="Start">
+            <HabitStart OnSubmit="HabitCreated" OnCancel="CancelHabit"></HabitStart>
+        </StepPanel>
+        <StepPanel Name="Details">
+            @if (habitStarted)
+            {
+                <HabitDetails OnSubmit="HabitDetailsAdded" OnCancel="CancelHabit" OnPrevious="GoToPreviousStep"></HabitDetails>
+            }
+        </StepPanel>
+        <StepPanel Name="Review">
+            @if (habitDetailsAdded)
+            {
+                <ReviewHabit OnSubmit="SubmitHabit" OnCancel="CancelHabit" OnPrevious="GoToPreviousStep"></ReviewHabit>
+            }
+        </StepPanel>
+    </Content>
+</Steps>
 
 @code {
-    public Habit Habit { get; set; } = HabitState.CurrentHabit;
+    private Habit habit = HabitState.CurrentHabit;
 
-    void CreateHabit()
+    private Steps stepsRef;
+    private string selectedStep = "Start";
+
+    bool habitStarted = false;
+    bool habitDetailsAdded = false;
+
+    async Task HabitCreated()
     {
-        HabitService.AddHabit(Habit);
+        if (habit.ImplementationDetails == null)
+            habit.AddImplementationDetails();
+        habitStarted = true;
+        await stepsRef.NextStep();
+    }
+
+    async Task HabitDetailsAdded()
+    {
+        habitDetailsAdded = true;
+        await stepsRef.NextStep();
+    }
+
+    async Task GoToPreviousStep()
+    {
+        await stepsRef.PreviousStep();
+    }
+
+    void CancelHabit()
+    {
         HabitState.Clear();
+        GoToHomePage();
+    }
+
+    void SubmitHabit()
+    {
+        HabitService.AddHabit(habit);
+        CancelHabit();
+    }
+
+    void GoToHomePage()
+    {
         Navigation.NavigateTo("/");
+    }
+
+    private bool NavigationAllowed(StepNavigationContext context)
+    {
+        switch (context.NextStepIndex)
+        {
+            case 1:
+                return true;
+            case 2:
+                return habitStarted;
+            case 3:
+                return context.CurrentStepIndex < 3 && habitDetailsAdded;
+            default:
+                return true;
+        }
     }
 }

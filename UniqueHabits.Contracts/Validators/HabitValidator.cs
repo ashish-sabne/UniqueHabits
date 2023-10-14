@@ -16,4 +16,18 @@ namespace UniqueHabits.Contracts.Validators
                 .When(h => h.Category != Enums.HabitCategory.Other);
         }
     }
+    
+    public class ImplementationDetailsValidator : AbstractValidator<ImplementationDetails>
+    {
+        public ImplementationDetailsValidator() 
+        {
+            RuleFor(id => id.How).NotEmpty();
+            RuleFor(id => id.WithWhat).NotEmpty();
+            RuleFor(id => id.When).NotEmpty();
+            RuleFor(id => id.Where).NotEmpty();
+            RuleFor(id => id.WithWhom).NotEmpty();
+        }
+    }
+
+
 }
