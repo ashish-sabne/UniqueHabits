@@ -1,66 +1,91 @@
 ﻿<EditForm Model="@habit" OnValidSubmit="StartHabit">
-    <FluentValidationValidator />
-    <Blazorise.ValidationSummary />
-    <Fields>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label" RequiredIndicator>System Name</FieldLabel>
-            <FieldBody>
-                <TextEdit @bind-Text="@habit.SystemName" Placeholder="e.g. Improve my bank balance"></TextEdit>
-                <ValidationMessage For="@(() => habit.SystemName)" />
-            </FieldBody>
-        </Field>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label" RequiredIndicator>What Measurable Result do you want?</FieldLabel>
-            <FieldBody>
-                <TextEdit @bind-Text="@habit.MeasurableResult" Placeholder="e.g. Save $10,000 in my bank account"></TextEdit>
-                <ValidationMessage For="@(() => habit.MeasurableResult)" />
-            </FieldBody>
-        </Field>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label">Why do you want the result?</FieldLabel>
-            <FieldBody>
-                <MemoEdit @bind-Text="@habit.Why" Placeholder="e.g. I want to attain financial freedom to spend more time with family"></MemoEdit>
-            </FieldBody>
-        </Field>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label">When will you start?</FieldLabel>
-            <FieldBody>
-                <DateEdit TValue="DateTime" @bind-Date="@habit.StartDate" Min="DateTime.Today"></DateEdit>
-                <ValidationMessage For="@(() => habit.StartDate)" />
-            </FieldBody>
-        </Field>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label">Category</FieldLabel>
-            <FieldBody>
-                <Select @bind-SelectedValue="@habit.Category">
-                    <SelectItem Value="@string.Empty">--Select Category--</SelectItem>
-                    @foreach (var category in Enum.GetValues<HabitCategory>())
-                    {
-                        <SelectItem Value="@category">@category</SelectItem>
-                    }
-                </Select>
-                <ValidationMessage For="@(() => habit.Category)" />
-            </FieldBody>
-        </Field>
+    <Validations @ref="@fluentValidations" Mode="ValidationMode.Auto" Model="@habit" HandlerType="typeof(FluentValidationHandler)">
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>System Name</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@habit.SystemName" Placeholder="e.g. Improve my bank balance">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>What Measurable Result do you want?</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@habit.MeasurableResult" Placeholder="e.g. Save $10,000 in my bank account">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label">Why do you want the result?</FieldLabel>
+                <FieldBody>
+                    <MemoEdit @bind-Text="@habit.Why" Placeholder="e.g. I want to attain financial freedom to spend more time with family"></MemoEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>When will you start?</FieldLabel>
+                <FieldBody>
+                    <DateEdit TValue="DateTime" @bind-Date="@habit.StartDate" Min="DateTime.Today">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </DateEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>Category</FieldLabel>
+                <FieldBody>
+                    <Select @bind-SelectedValue="@habit.Category">
+                        <ChildContent>
+                            <SelectItem Value="@string.Empty">--Select Category--</SelectItem>
+                            @foreach (var category in Enum.GetValues<HabitCategory>())
+                            {
+                                <SelectItem Value="@category">@category</SelectItem>
+                            }
+                        </ChildContent>
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </Select>
+                </FieldBody>
+            </Field>
+        </Validation>
         @if (habit.Category == HabitCategory.Other)
         {
-            <Field ColumnSize="ColumnSize.IsFull">
-                <FieldLabel Class="col-form-label">Describe the category</FieldLabel>
+            <Validation>
+                <Field ColumnSize="ColumnSize.IsFull">
+                    <FieldLabel Class="col-form-label" RequiredIndicator>Describe the category</FieldLabel>
                 <FieldBody>
-                    <TextEdit @bind-Value="@habit.CategoryDescription" class="form-control" placeholder="e.g. Service"></TextEdit>
+                    <TextEdit @bind-Text="@habit.CategoryDescription" class="form-control" placeholder="e.g. Service"></TextEdit>
                     <ValidationMessage For="@(() => habit.CategoryDescription)" />
                 </FieldBody>
             </Field>
+        </Validation>
         }
+
         <Field ColumnSize="ColumnSize.IsFull">
             <Button Color="Color.Primary" Type="ButtonType.Submit" Float="Float.End" Margin="Margin.Is2">Next</Button>
             <Button Color="Color.Light" Type="ButtonType.Reset" Float="Float.Start" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>
         </Field>
-    </Fields>
+
+    </Validations>
 </EditForm>
 
 @code {
-    
+
     [Parameter]
     public EventCallback OnSubmit { get; set; }
     [Parameter]
@@ -68,9 +93,12 @@
 
     Habit habit = HabitState.CurrentHabit;
 
+    Validations fluentValidations;
+
     private async Task StartHabit()
     {
-        await OnSubmit.InvokeAsync();
+        if (await fluentValidations.ValidateAll())
+            await OnSubmit.InvokeAsync();
     }
 
     private async Task Cancel()

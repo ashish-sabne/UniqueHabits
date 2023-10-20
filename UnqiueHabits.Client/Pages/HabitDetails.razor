@@ -1,53 +1,75 @@
 ﻿<EditForm Model="@implementation" OnValidSubmit="AddImplementationDetails">
-    <FluentValidationValidator />
-    <Blazorise.ValidationSummary />
-
-    <Fields>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label" RequiredIndicator>How do you want to get the result?</FieldLabel>
-            <FieldBody>
-                <MemoEdit Rows="10" @bind-Text="@implementation.How" @bind-Placeholder="@howExamplePlaceHolder"></MemoEdit>
-                <ValidationMessage For="@(() => implementation.How)" />
-            </FieldBody>
-        </Field>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label" RequiredIndicator>What tools will you need?</FieldLabel>
-            <FieldBody>
-                <TextEdit @bind-Text="@implementation.WithWhat" Placeholder="e.g. Calculator, MS Excel, Online Banking App"></TextEdit>
-                <ValidationMessage For="@(() => implementation.WithWhat)" />
-            </FieldBody>
-        </Field>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label" RequiredIndicator>When will you practice the habit?</FieldLabel>
-            <FieldBody>
-                <TextEdit @bind-Text="@implementation.When" Placeholder="e.g. Every Saturday at 10 a.m.">
-                    <FieldHelp>Include frequency as well as duration</FieldHelp>
-                </TextEdit>
-                <ValidationMessage For="@(() => implementation.When)" />
-            </FieldBody>
-        </Field>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label" RequiredIndicator>Where will you practice the habit?</FieldLabel>
-            <FieldBody>
-                <TextEdit @bind-Text="@implementation.Where" Placeholder="e.g. On my couch">
-                </TextEdit>
-                <ValidationMessage For="@(() => implementation.Where)" />
-            </FieldBody>
-        </Field>
-        <Field ColumnSize="ColumnSize.IsFull">
-            <FieldLabel Class="col-form-label" RequiredIndicator>With whom will you practice the habit?</FieldLabel>
-            <FieldBody>
-                <TextEdit @bind-Text="@implementation.WithWhom" Placeholder="e.g. With my spouse">
-                </TextEdit>
-                <ValidationMessage For="@(() => implementation.WithWhom)" />
-            </FieldBody>
-        </Field>
+    <Validations @ref="@fluentValidations" Mode="ValidationMode.Auto" Model="@implementation" HandlerType="typeof(FluentValidationHandler)">
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>How do you want to get the result?</FieldLabel>
+                <FieldBody>
+                    <MemoEdit Rows="10" @bind-Text="@implementation.How" @bind-Placeholder="@howExamplePlaceHolder">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </MemoEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>What tools will you need?</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@implementation.WithWhat" Placeholder="e.g. Calculator, MS Excel, Online Banking App">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </TextEdit>
+                    <ValidationMessage For="@(() => implementation.WithWhat)" />
+                </FieldBody>
+            </Field>
+        </Validation>
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>When will you practice the habit?</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@implementation.When" Placeholder="e.g. Every Saturday at 10 a.m.">
+                        <ChildContent>
+                            <FieldHelp>Include frequency as well as duration</FieldHelp>
+                        </ChildContent>
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>Where will you practice the habit?</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@implementation.Where" Placeholder="e.g. On my couch">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>With whom will you practice the habit?</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@implementation.WithWhom" Placeholder="e.g. With my spouse">
+                        <Feedback>
+                            <ValidationError />
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
         <Field ColumnSize="ColumnSize.IsFull" TextAlignment="TextAlignment.Center">
             <Button Color="Color.Primary" Type="ButtonType.Submit" Float="Float.End" Margin="Margin.Is2">Next</Button>
             <Button Color="Color.Light" Type="ButtonType.Reset" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>
             <Button Color="Color.Warning" Float="Float.Start" Margin="Margin.Is2" Clicked="Previous">Previous</Button>
         </Field>
-    </Fields>
+    </Validations>
 </EditForm>
 
 @code {
@@ -59,20 +81,23 @@
     [Parameter]
     public EventCallback OnPrevious { get; set; }
 
+    Validations fluentValidations;
+
     ImplementationDetails implementation = HabitState.CurrentHabit.ImplementationDetails;
 
     private string howExamplePlaceHolder = "1. Avoid frivolous purchases\r\n2. Reduce eating out\r\n3. Restrict online buying\r\n4. Start automatic saving program";
 
     private async Task AddImplementationDetails()
     {
-        await OnSubmit.InvokeAsync();
+        if (await fluentValidations.ValidateAll())
+            await OnSubmit.InvokeAsync();
     }
 
     private async Task Cancel()
     {
         await OnCancel.InvokeAsync();
     }
-    
+
     private async Task Previous()
     {
         await OnPrevious.InvokeAsync();

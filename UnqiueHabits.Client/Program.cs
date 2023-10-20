@@ -1,8 +1,11 @@
 using Blazorise;
+using Blazorise.FluentValidation;
 using Blazorise.Icons.Material;
 using Blazorise.Material;
+using FluentValidation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using UniqueHabits.Contracts.Validators;
 using UniqueHabits.Shared;
 using UnqiueHabits.Client;
 
@@ -21,6 +24,8 @@ builder.Services
         options.Immediate = true;
     })
     .AddMaterialProviders()
-    .AddMaterialIcons();
+    .AddMaterialIcons()
+    .AddBlazoriseFluentValidation()
+    .AddValidatorsFromAssembly(typeof(HabitValidator).Assembly);
 
 await builder.Build().RunAsync();
