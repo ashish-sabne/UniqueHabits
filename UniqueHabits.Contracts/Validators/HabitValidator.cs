@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using UniqueHabits.Shared.Enums;
 
 namespace UniqueHabits.Contracts.Validators
 {
@@ -11,9 +12,9 @@ namespace UniqueHabits.Contracts.Validators
             RuleFor(h => h.StartDate).NotEmpty().GreaterThanOrEqualTo(DateTime.Today);
             RuleFor(h => h.Category).NotEmpty();
             RuleFor(h => h.CategoryDescription).NotEmpty()
-                .When(h => h.Category == Enums.HabitCategory.Other);
+                .When(h => h.Category == HabitCategory.Other);
             RuleFor(h => h.CategoryDescription).Empty()
-                .When(h => h.Category != Enums.HabitCategory.Other);
+                .When(h => h.Category != HabitCategory.Other);
         }
     }
     

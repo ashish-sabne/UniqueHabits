@@ -1,6 +1,6 @@
 ﻿using UniqueHabits.Contracts;
 
-namespace UniqueHabits.Shared
+namespace UnqiueHabits.Client
 {
     public class HabitState
     {

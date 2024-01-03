@@ -1,4 +1,4 @@
-﻿namespace UniqueHabits.Contracts.Enums
+﻿namespace UniqueHabits.Shared.Enums
 {
     public enum HabitCategory
     {

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Seed\" />
+    <ProjectReference Include="..\UniqueHabits.Shared\UniqueHabits.Shared.csproj" />
   </ItemGroup>
 
 </Project>

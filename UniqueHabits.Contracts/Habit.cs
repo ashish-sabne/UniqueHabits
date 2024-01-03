@@ -1,4 +1,4 @@
-﻿using UniqueHabits.Contracts.Enums;
+﻿using UniqueHabits.Shared.Enums;
 
 namespace UniqueHabits.Contracts
 {

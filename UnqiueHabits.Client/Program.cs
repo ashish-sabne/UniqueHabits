@@ -6,8 +6,8 @@ using FluentValidation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using UniqueHabits.Contracts.Validators;
-using UniqueHabits.Shared;
 using UnqiueHabits.Client;
+using UnqiueHabits.Client.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
