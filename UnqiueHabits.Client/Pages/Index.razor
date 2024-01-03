@@ -51,7 +51,7 @@ else
 @*<SurveyPrompt Title="How is Blazor working for you?" />*@
 
 @code {
-    List<Habit> Habits = new();
+    List<HabitModel> Habits = new();
     protected override void OnInitialized()
     {
         Habits = HabitService.GetHabits();

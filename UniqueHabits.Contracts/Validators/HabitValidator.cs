@@ -3,7 +3,7 @@ using UniqueHabits.Shared.Enums;
 
 namespace UniqueHabits.Contracts.Validators
 {
-    public class HabitValidator : AbstractValidator<Habit>
+    public class HabitValidator : AbstractValidator<HabitModel>
     {
         public HabitValidator() 
         {

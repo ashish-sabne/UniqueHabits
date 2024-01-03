@@ -2,7 +2,7 @@
 
 namespace UniqueHabits.Contracts
 {
-    public class Habit
+    public class HabitModel
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string SystemName { get; set; }

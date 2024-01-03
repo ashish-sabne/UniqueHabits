@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using UniqueHabits.Contracts;
 using UniqueHabits.Data;
 using UniqueHabits.Domain.Aggregates;
 
@@ -11,9 +13,11 @@ namespace UniqueHabits.Api.Controllers
     public class HabitsController : ControllerBase
     {
         private readonly HabitsContext _context;
-        public HabitsController(HabitsContext context)
+        private readonly IMapper _mapper;
+        public HabitsController(HabitsContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -25,8 +29,9 @@ namespace UniqueHabits.Api.Controllers
             {
                 return NotFound();
             }
+            var models = _mapper.Map<List<HabitModel>>(habits);
 
-            return Ok(habits);
+            return Ok(models);
         }
 
         [HttpPost]

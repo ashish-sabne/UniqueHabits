@@ -73,7 +73,7 @@
     [Parameter]
     public EventCallback OnPrevious { get; set; }
 
-    Habit habit = HabitState.CurrentHabit;
+    HabitModel habit = HabitState.CurrentHabit;
     string howHtml = HabitState.CurrentHabit.ImplementationDetails.How.Replace("\n", "<br>");
 
     private async Task Submit()

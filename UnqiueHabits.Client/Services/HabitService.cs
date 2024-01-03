@@ -4,14 +4,14 @@ namespace UnqiueHabits.Client.Services
 {
     public class HabitService
     {
-        private List<Habit> habits;
+        private List<HabitModel> habits;
 
-        public void AddHabit(Habit habit)
+        public void AddHabit(HabitModel habit)
         {
             habits.Add(habit);
         }
 
-        public List<Habit> GetHabits()
+        public List<HabitModel> GetHabits()
         {
             if (habits == null)
                 habits = new();
