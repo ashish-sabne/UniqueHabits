@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using UniqueHabits.Data;
+using UnqiueHabits.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddHttpClient<HabitService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7135/");
+});
+
+/*builder.Services.AddHttpClient("HabitApiHttpClient", httpClient =>
+{
+    httpClient.BaseAddress = new Uri("https://localhost:7135/");
+});*/
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("MyCorsPolicy", policy =>
+    {
+        policy.WithOrigins("*").AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,6 +44,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("MyCorsPolicy");
 
 app.UseAuthorization();
 

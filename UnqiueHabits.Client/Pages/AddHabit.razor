@@ -1,4 +1,5 @@
 ﻿@page "/add-habit"
+@using UnqiueHabits.Contracts;
 @inject HabitService HabitService
 @inject NavigationManager Navigation
 
@@ -82,7 +83,7 @@
 
     void SubmitHabit()
     {
-        HabitService.AddHabit(habit);
+        //HabitService.AddHabit(habit);
         CancelHabit();
     }
 
