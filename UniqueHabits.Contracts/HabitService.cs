@@ -17,7 +17,7 @@ namespace UnqiueHabits.Contracts
         {
             try
             {
-                var habits = await _httpClient.GetFromJsonAsync<List<HabitModel>>("https://localhost:7135/api/Habits");
+                var habits = await _httpClient.GetFromJsonAsync<List<HabitModel>>("api/Habits");
                 return habits ?? new List<HabitModel>();
             }
             catch (Exception ex)

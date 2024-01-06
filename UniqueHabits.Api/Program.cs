@@ -16,16 +16,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddHttpClient<HabitService>(client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7135/");
-});
-
-/*builder.Services.AddHttpClient("HabitApiHttpClient", httpClient =>
-{
-    httpClient.BaseAddress = new Uri("https://localhost:7135/");
-});*/
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyCorsPolicy", policy =>
