@@ -9,7 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<HabitsContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("HabitsDbConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("HabitsDbConnection"),
+        options => options.EnableRetryOnFailure(maxRetryCount: 5,
+					maxRetryDelay: TimeSpan.FromSeconds(30),
+					errorNumbersToAdd: null));
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

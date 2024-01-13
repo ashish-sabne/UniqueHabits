@@ -12,8 +12,8 @@ using UniqueHabits.Data;
 namespace UniqueHabits.Data.Migrations
 {
     [DbContext(typeof(HabitsContext))]
-    [Migration("20231217133833_SeedHabit")]
-    partial class SeedHabit
+    [Migration("20240113193752_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -109,7 +109,7 @@ namespace UniqueHabits.Data.Migrations
                                 new
                                 {
                                     HabitId = new Guid("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
-                                    How = "• Play my “Energy Music” playlist.\r\n• Open LinkedIn Learning app on my tablet.\r\n• Continue from the last spot I was at when I finished the day before. (If I don’t\r\nhave a course, do a search for “Leadership” and pick the next one on the list that I\r\nhaven’t taken.)\r\n• While watching the course, listen for things I can DO that day.\r\n• Make notes in Evernote, especially on actions I can take.\r\n• After 20 minutes, stop.\r\n• Then take 5 minutes to post on LinkedIn what I learned.\r\n• Copy what I wrote and send myself an email.\r\n• Read the email when starting my work.",
+                                    How = "• Play my “Energy Music” playlist.\r\n• Open LinkedIn Learning app on my tablet.\r\n• Continue from the last spot I was at when I finished the day before. (If I don’t have a course, do a search for “Leadership” and pick the next one on the list that I haven’t taken.)\r\n• While watching the course, listen for things I can DO that day.\r\n• Make notes in Evernote, especially on actions I can take.\r\n• After 20 minutes, stop.\r\n• Then take 5 minutes to post on LinkedIn what I learned.\r\n• Copy what I wrote and send myself an email.\r\n• Read the email when starting my work.",
                                     When = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
                                     Where = "On my couch",
                                     WithWhat = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
