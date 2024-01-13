@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using UniqueHabits.Contracts;
 
 namespace UnqiueHabits.Contracts
@@ -20,9 +19,20 @@ namespace UnqiueHabits.Contracts
                 var habits = await _httpClient.GetFromJsonAsync<List<HabitModel>>("api/Habits");
                 return habits ?? new List<HabitModel>();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var message = ex.Message;
+                throw;
+            }
+        }
+        public async Task<HabitModel> GetHabit(Guid habitId)
+        {
+            try
+            {
+                var habit = await _httpClient.GetFromJsonAsync<HabitModel>($"api/Habits/{habitId}");
+                return habit;
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }

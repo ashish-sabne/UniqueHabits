@@ -12,7 +12,7 @@ namespace UniqueHabits.Contracts
         public HabitCategory? Category { get; set; }
         public string CategoryDescription { get; set; }
 
-        public ImplementationDetails ImplementationDetails { get; set; }
+        public ImplementationDetails ImplementationDetails { get; set; } = new ImplementationDetails();
 
         public void AddImplementationDetails()
         {

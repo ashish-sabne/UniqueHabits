@@ -4,11 +4,10 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h2>Hello, world!</h2>
 
-Welcome to your new app.
-
-@if (!Habits.Any())
+<LoadingIndicator @bind-Visible="showLoading">
+@if (!showLoading && !Habits.Any())
 {
     <Card>
         <CardBody>
@@ -40,7 +39,7 @@ else
                 <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
                     @habit.MeasurableResult
                 </CardText>
-                <Button Color="Color.Primary" Margin="Margin.Is2.FromTop">
+                <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/details/{habit.Id}")">
                     Read more <Icon Name="IconName.ArrowRight" />
                 </Button>
             </CardBody>
@@ -48,14 +47,16 @@ else
     }
     </CardDeck>
 }
-
-@*<SurveyPrompt Title="How is Blazor working for you?" />*@
+</LoadingIndicator>
 
 @code {
     List<HabitModel> Habits = new();
+    bool showLoading = true;
     protected override async Task OnInitializedAsync()
     {
+        showLoading = true;
         Habits = await HabitService.GetHabits();
+        showLoading = false;
         await base.OnInitializedAsync();
     }
 }

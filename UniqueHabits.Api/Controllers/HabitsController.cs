@@ -33,6 +33,20 @@ namespace UniqueHabits.Api.Controllers
 
             return Ok(models);
         }
+        
+        [HttpGet("{habitId}")]
+        public async Task<IActionResult> GetHabit(Guid habitId)
+        {
+            var habit = await _context.Habits.FindAsync(habitId);
+
+            if (habit == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<HabitModel>(habit);
+
+            return Ok(model);
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddHabit([FromBody] Habit habit)

@@ -56,6 +56,12 @@
     bool habitStarted = false;
     bool habitDetailsAdded = false;
 
+    protected override void OnInitialized()
+    {
+        HabitState.Clear();
+        base.OnInitialized();
+    }
+
     async Task HabitCreated()
     {
         if (habit.ImplementationDetails == null)
