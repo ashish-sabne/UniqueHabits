@@ -24,20 +24,90 @@ namespace UniqueHabits.Data.Seed
                     Category = HabitCategory.Career,
                     CategoryDescription = "",
                 }
-            ); 
+            );
         }
 
-        public static DataBuilder Seed(this OwnedNavigationBuilder<Habit, ImplementationDetails> b)
+        public static DataBuilder Seed(this OwnedNavigationBuilder<Habit, Implementation> b)
         {
             return b.HasData(
                 new
                 {
+                    Id = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
                     HabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
-                    How = "• Play my “Energy Music” playlist.\r\n• Open LinkedIn Learning app on my tablet.\r\n• Continue from the last spot I was at when I finished the day before. (If I don’t have a course, do a search for “Leadership” and pick the next one on the list that I haven’t taken.)\r\n• While watching the course, listen for things I can DO that day.\r\n• Make notes in Evernote, especially on actions I can take.\r\n• After 20 minutes, stop.\r\n• Then take 5 minutes to post on LinkedIn what I learned.\r\n• Copy what I wrote and send myself an email.\r\n• Read the email when starting my work.",
                     WithWhat = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
                     When = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
                     Where = "On my couch",
-                    WithWhom = "Share on LinkedIn one thing I learned today"
+                    WithWhom = "Share on LinkedIn one thing I learned today",
+                    CreatedDate = new DateTime(2024, 1, 12, 0, 0, 0)
+                }
+            );
+        }
+
+        public static DataBuilder Seed(this OwnedNavigationBuilder<Implementation, ImplementationStep> b)
+        {
+            return b.HasData(
+                new
+                {
+                    Id = Guid.Parse("20482634-af53-4db0-99d9-cda5a83da543"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "Play my \"Energy Music\" playlist."
+                },
+                new
+                {
+                    Id = Guid.Parse("1abdf905-808c-4ac7-bdc7-8741694adcb4"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "Open LinkedIn Learning app on my tablet."
+                },
+                new
+                {
+                    Id = Guid.Parse("c07213c8-c8a6-491e-8ef5-0388cfcc4066"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "Continue from the last spot I was at when I finished the day before. (If I don’t have a course, do a search for \"Leadership\" and pick the next one on the list that I haven’t taken.)"
+                },
+                new
+                {
+                    Id = Guid.Parse("15c47fda-6c6e-4901-b463-1ab15addac7e"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "While watching the course, listen for things I can DO that day."
+                },
+                new
+                {
+                    Id = Guid.Parse("e315e429-fbd6-4a9f-9df3-e3e4bfbb584c"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "Make notes in Evernote, especially on actions I can take."
+                },
+                new
+                {
+                    Id = Guid.Parse("3dba9c2e-218d-4dad-b1f2-264a4cea85b1"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "Make notes in Evernote, especially on actions I can take."
+                },
+                new
+                {
+                    Id = Guid.Parse("c61bb021-d507-4cdd-bb5a-7cb0b33b7f28"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "After 20 minutes, stop."
+                },
+                new
+                {
+                    Id = Guid.Parse("a319ba49-3228-4e61-8ea9-5208d616af07"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "Copy what I wrote and send myself an email."
+                },
+                new
+                {
+                    Id = Guid.Parse("6d07f8b3-81d6-4cf9-83b5-583029d84185"),
+                    ImplementationId = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                    ImplementationHabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
+                    Step = "Read the email when starting my work."
                 }
             );
         }

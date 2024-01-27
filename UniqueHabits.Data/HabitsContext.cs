@@ -18,13 +18,16 @@ namespace UniqueHabits.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Habit>().OwnsOne(h => h.ImplementationDetails).WithOwner();
+            modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).OwnsMany(i => i.Steps);
 
             modelBuilder.Entity<Habit>().Property(h => h.Category)
                 .HasConversion(new EnumToStringConverter<HabitCategory>());
 
             modelBuilder.Entity<Habit>().Seed();
-            modelBuilder.Entity<Habit>().OwnsOne(h => h.ImplementationDetails).Seed();
+            
+            modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).Seed();
+
+            modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).OwnsMany(i => i.Steps).Seed();
         }
     }
 }

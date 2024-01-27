@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniqueHabits.Data;
 
@@ -11,9 +12,11 @@ using UniqueHabits.Data;
 namespace UniqueHabits.Data.Migrations
 {
     [DbContext(typeof(HabitsContext))]
-    partial class HabitsContextModelSnapshot : ModelSnapshot
+    [Migration("20240127171636_MultipleImplementationsForHabit")]
+    partial class MultipleImplementationsForHabit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

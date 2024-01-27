@@ -14,15 +14,10 @@ namespace UniqueHabits.Contracts
 
         public ImplementationDetails ImplementationDetails { get; set; } = new ImplementationDetails();
 
-        public void AddImplementationDetails()
+/*        public void AddImplementationDetails()
         {
             ImplementationDetails = new();
-        }
-        
-        public void UpdateImplementationDetails(ImplementationDetails implementationDetails)
-        {
-            ImplementationDetails = implementationDetails;
-        }
+        }*/
 
     }
 }

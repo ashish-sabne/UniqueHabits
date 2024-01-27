@@ -64,8 +64,8 @@
 
     async Task HabitCreated()
     {
-        if (habit.ImplementationDetails == null)
-            habit.AddImplementationDetails();
+        /*if (habit.ImplementationDetails == null)
+            habit.AddImplementationDetails();*/
         habitStarted = true;
         await stepsRef.NextStep();
     }

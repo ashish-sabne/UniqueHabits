@@ -14,7 +14,7 @@ namespace UniqueHabits.Domain.Aggregates
             StartDate = startDate;
             Category = category;
             CategoryDescription = categoryDescription;
-            ImplementationDetails = new ImplementationDetails();
+            Implementations = new();
         }
 
         public Guid Id { get; private set; }
@@ -25,11 +25,6 @@ namespace UniqueHabits.Domain.Aggregates
         public HabitCategory Category { get; private set; }
         public string CategoryDescription { get; private set; }
 
-        public virtual ImplementationDetails ImplementationDetails { get; private set; }
-
-        public void UpdateImplementationDetails(ImplementationDetails implementationDetails)
-        {
-            ImplementationDetails = implementationDetails;
-        }
+        public virtual List<Implementation> Implementations { get; private set; } = new();
     }
 }
