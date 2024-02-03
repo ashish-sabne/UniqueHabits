@@ -47,12 +47,7 @@
 			<Field ColumnSize="ColumnSize.IsFull">
 				<FieldLabel Class="col-form-label">How do you want to get the result?</FieldLabel>
 				<FieldBody>
-					<OrderedList>
-						@foreach (var step in steps)
-						{
-							<OrderedListItem>@step</OrderedListItem>
-						}
-					</OrderedList>
+					<HabitSteps Steps="habit.ImplementationDetails.Steps" IsEditable="false"></HabitSteps>
 				</FieldBody>
 			</Field>
 			<Field ColumnSize="ColumnSize.IsFull">
@@ -105,7 +100,7 @@
 	HabitModel habit = new();
 	List<string> steps = new();
 
-	protected override async Task OnInitializedAsync()
+	protected async override Task OnParametersSetAsync()
 	{
 		if (Id != Guid.Empty)
 		{
@@ -114,8 +109,9 @@
 
 		habit = HabitState.CurrentHabit;
 		steps = habit.ImplementationDetails.How.Split("\n").ToList();
+		StateHasChanged();
 
-		await base.OnInitializedAsync();
+		await base.OnParametersSetAsync();
 	}
 
 	private async Task Submit()

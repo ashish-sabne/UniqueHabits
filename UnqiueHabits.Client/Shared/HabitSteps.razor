@@ -1,0 +1,81 @@
+﻿@if (IsEditable)
+{
+    <Card Shadow="Shadow.Default" Margin="Margin.Is3.OnY">
+        <CardBody>
+            <TextEdit @bind-Text="@newStepText" Placeholder="e.g. Save $10,000 in my bank account" />
+        </CardBody>
+        <CardFooter>
+            <Button Color="Color.Warning" Float="Float.Start" Margin="Margin.Is2" Clicked="AddStep">Add Step</Button>
+        </CardFooter>
+    </Card>
+}
+
+@if (Steps != null && Steps.Any())
+{
+    <DropContainer @ref="dropContainer" TItem="ImplementationStep" Items="@Steps" ItemsFilter="StepsFilter" ItemDropped="@ItemDropped" Flex="Flex.Wrap.Grow.Is1">
+        <ChildContent>
+            <DropZone @ref="dropZone" AllowReorder="IsEditable" DropAllowed="(i) => IsEditable" TItem="ImplementationStep" Name="Steps"
+                      Border="Border.Rounded" Background="Background.Light" Padding="Padding.Is3" Margin="Margin.Is3" Flex="Flex.Grow.Is1">
+            </DropZone>
+        </ChildContent>
+        <ItemTemplate>
+            <Card Shadow="Shadow.Default" Margin="Margin.Is3.OnY">
+                <CardBody>
+                    @context.Step
+                </CardBody>
+            </Card>
+        </ItemTemplate>
+    </DropContainer>
+}
+
+@if (IsEditable)
+{
+    <Div TextAlignment="TextAlignment.Center">
+        <Button Color="Color.Primary" Float="Float.End" Margin="Margin.Is2" Clicked="Submit">Submit</Button>
+    </Div>
+}
+
+
+
+@code {
+    DropContainer<ImplementationStep> dropContainer;
+    DropZone<ImplementationStep> dropZone;
+
+    [Parameter]
+    public List<ImplementationStep> Steps { get; set; }
+
+    [Parameter]
+    public bool IsEditable { get; set; }
+
+    private Task ItemDropped(DraggableDroppedEventArgs<ImplementationStep> dropItem)
+    {
+        //dropItem.Item.Group = dropItem.DropZoneName;
+        return Task.CompletedTask;
+    }
+
+    string newStepText = "";
+
+    void AddStep()
+    {
+        if (!string.IsNullOrEmpty(newStepText))
+        {
+            Steps.Add(new ImplementationStep
+            {
+                Id = Guid.NewGuid(),
+                Step = newStepText,
+            });
+            dropContainer.Refresh();
+            newStepText = "";
+        }
+    }
+
+    void Submit()
+    {
+        var copy = dropContainer.Items;
+    }
+
+    private bool StepsFilter(ImplementationStep implementationStep, string s)
+    {
+        return implementationStep != null;
+    }
+}

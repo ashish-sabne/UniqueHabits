@@ -20,6 +20,6 @@
         public string When { get; set; }
         public string Where { get; set; }
         public string WithWhom { get; set; }
-        public List<string> Steps { get; set; } = new();
+        public List<ImplementationStep> Steps { get; set; } = new();
     }
 }
