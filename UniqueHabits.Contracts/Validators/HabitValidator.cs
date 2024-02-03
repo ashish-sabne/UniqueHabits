@@ -22,11 +22,19 @@ namespace UniqueHabits.Contracts.Validators
     {
         public ImplementationDetailsValidator() 
         {
-            RuleFor(id => id.How).NotEmpty();
-            RuleFor(id => id.WithWhat).NotEmpty();
-            RuleFor(id => id.When).NotEmpty();
-            RuleFor(id => id.Where).NotEmpty();
-            RuleFor(id => id.WithWhom).NotEmpty();
+            RuleFor(i => i.WithWhat).NotEmpty();
+            RuleFor(i => i.When).NotEmpty();
+            RuleFor(i => i.Where).NotEmpty();
+            RuleFor(i => i.WithWhom).NotEmpty();
+            RuleForEach(i => i.Steps).NotEmpty().SetValidator(new ImplementationStepValidator());
+        }
+    }
+
+    public class ImplementationStepValidator : AbstractValidator<ImplementationStep>
+    {
+        public ImplementationStepValidator()
+        {
+            RuleFor(s => s.Step).NotEmpty();
         }
     }
 

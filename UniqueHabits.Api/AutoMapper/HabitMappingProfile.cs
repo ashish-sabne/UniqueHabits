@@ -12,8 +12,7 @@ namespace UniqueHabits.Api.AutoMapper
                 .ForMember(dest => dest.ImplementationDetails, opt => opt.MapFrom(src => src.Implementations.OrderByDescending(i => i.CreatedDate).FirstOrDefault()));
 
             CreateMap<Implementation, ImplementationDetails>()
-                .ForMember(dest => dest.Steps, opt => opt.MapFrom(src => src.Steps.OrderBy(s => s.Sequence)))
-                .ForMember(dest => dest.How, opt => opt.MapFrom(src => string.Join("\n", src.Steps.OrderBy(s => s.Sequence).Select(s => s.Step))));
+                .ForMember(dest => dest.Steps, opt => opt.MapFrom(src => src.Steps.OrderBy(s => s.Sequence)));
 
             CreateMap<Domain.Aggregates.ImplementationStep, Contracts.ImplementationStep>();
         }

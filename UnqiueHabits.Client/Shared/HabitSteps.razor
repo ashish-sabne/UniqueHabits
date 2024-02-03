@@ -10,9 +10,9 @@
     </Card>
 }
 
-@if (Steps != null && Steps.Any())
+@if (Steps != null)
 {
-    <DropContainer @ref="dropContainer" TItem="ImplementationStep" Items="@Steps" ItemsFilter="StepsFilter" ItemDropped="@ItemDropped" Flex="Flex.Wrap.Grow.Is1">
+    <DropContainer @ref="dropContainer" TItem="ImplementationStep" Items="@Steps" ItemsFilter="(i,s) => {return true;}" ItemDropped="@ItemDropped" Flex="Flex.Wrap.Grow.Is1">
         <ChildContent>
             <DropZone @ref="dropZone" AllowReorder="IsEditable" DropAllowed="(i) => IsEditable" TItem="ImplementationStep" Name="Steps"
                       Border="Border.Rounded" Background="Background.Light" Padding="Padding.Is3" Margin="Margin.Is3" Flex="Flex.Grow.Is1">
@@ -28,13 +28,6 @@
     </DropContainer>
 }
 
-@if (IsEditable)
-{
-    <Div TextAlignment="TextAlignment.Center">
-        <Button Color="Color.Primary" Float="Float.End" Margin="Margin.Is2" Clicked="Submit">Submit</Button>
-    </Div>
-}
-
 
 
 @code {
@@ -47,35 +40,54 @@
     [Parameter]
     public bool IsEditable { get; set; }
 
-    private Task ItemDropped(DraggableDroppedEventArgs<ImplementationStep> dropItem)
+    private Task ItemDropped(DraggableDroppedEventArgs<ImplementationStep> args)
     {
-        //dropItem.Item.Group = dropItem.DropZoneName;
+        var targetSequence = args.IndexInZone;
+        var targetItem = args.Item;
+        RearrangeSteps(targetSequence, targetItem);
         return Task.CompletedTask;
     }
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
+
     string newStepText = "";
+
+    void RearrangeSteps(int targetSequence, ImplementationStep targetItem)
+    {
+        var newSteps = new List<ImplementationStep>();
+
+        newSteps.AddRange(Steps.Where(s => s.Id != targetItem.Id).OrderBy(s => s.Sequence));
+        newSteps.Insert(targetSequence, targetItem);
+
+        Steps = newSteps;
+        ReorderSteps();
+    }
+
+    void ReorderSteps()
+    {
+        for (int index = 0; index < Steps.Count; index++)
+        {
+            Steps[index].Sequence = index + 1;
+        }
+        dropContainer.Refresh();
+    }
 
     void AddStep()
     {
         if (!string.IsNullOrEmpty(newStepText))
         {
+            int newSequence = Steps.Count;
             Steps.Add(new ImplementationStep
             {
                 Id = Guid.NewGuid(),
                 Step = newStepText,
+                Sequence = newSequence
             });
-            dropContainer.Refresh();
+            ReorderSteps();
             newStepText = "";
         }
-    }
-
-    void Submit()
-    {
-        var copy = dropContainer.Items;
-    }
-
-    private bool StepsFilter(ImplementationStep implementationStep, string s)
-    {
-        return implementationStep != null;
     }
 }

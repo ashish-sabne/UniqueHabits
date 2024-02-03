@@ -10,5 +10,6 @@ namespace UniqueHabits.Contracts
     {
         public Guid Id { get; set; }
         public string Step { get; set; }
+        public int Sequence { get; set; }
     }
 }

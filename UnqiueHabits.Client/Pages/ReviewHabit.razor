@@ -5,127 +5,132 @@
 <h5>Review Habit Details</h5>
 @if (Id == Guid.Empty)
 {
-	<h6>If you need to change anything, go to the relevant section by clicking the &quot;Previous&quot; Button</h6>
+    <h6>If you need to change anything, go to the relevant section by clicking the &quot;Previous&quot; Button</h6>
 }
 
 <Jumbotron Margin="Margin.Is4.FromBottom.Is0.FromTop" Padding="Padding.Is4.FromBottom.Is4.FromTop">
-	<Fields>
-		<Field ColumnSize="ColumnSize.IsFull">
-			<FieldLabel Class="col-form-label">System Name</FieldLabel>
-			<FieldBody><Div>@habit.SystemName</Div></FieldBody>
-		</Field>
-		<Field ColumnSize="ColumnSize.IsFull">
-			<FieldLabel Class="col-form-label">What Measurable Result do you want?</FieldLabel>
-			<FieldBody><Div>@habit.MeasurableResult</Div></FieldBody>
-		</Field>
-		<Field ColumnSize="ColumnSize.IsFull">
-			<FieldLabel Class="col-form-label">Why do you want the result?</FieldLabel>
-			<FieldBody><Div>@habit.Why</Div></FieldBody>
-		</Field>
-		<Field ColumnSize="ColumnSize.IsFull">
-			<FieldLabel Class="col-form-label">When will you start?</FieldLabel>
-			<FieldBody><Div>@habit.StartDate.ToShortDateString()</Div></FieldBody>
-		</Field>
-		<Field ColumnSize="ColumnSize.IsFull">
-			<FieldLabel Class="col-form-label">Category</FieldLabel>
-			<FieldBody><Div>@habit.Category</Div></FieldBody>
-		</Field>
-		@if (habit.Category == HabitCategory.Other)
-		{
-			<Field ColumnSize="ColumnSize.IsFull">
-				<FieldLabel Class="col-form-label">Describe the category</FieldLabel>
-				<FieldBody><Div>@habit.CategoryDescription</Div></FieldBody>
-			</Field>
-		}
-	</Fields>
+    <Fields>
+        <Field ColumnSize="ColumnSize.IsFull">
+            <FieldLabel Class="col-form-label">System Name</FieldLabel>
+            <FieldBody><Div>@habit.SystemName</Div></FieldBody>
+        </Field>
+        <Field ColumnSize="ColumnSize.IsFull">
+            <FieldLabel Class="col-form-label">What Measurable Result do you want?</FieldLabel>
+            <FieldBody><Div>@habit.MeasurableResult</Div></FieldBody>
+        </Field>
+        <Field ColumnSize="ColumnSize.IsFull">
+            <FieldLabel Class="col-form-label">Why do you want the result?</FieldLabel>
+            <FieldBody><Div>@habit.Why</Div></FieldBody>
+        </Field>
+        <Field ColumnSize="ColumnSize.IsFull">
+            <FieldLabel Class="col-form-label">When will you start?</FieldLabel>
+            <FieldBody><Div>@habit.StartDate.ToShortDateString()</Div></FieldBody>
+        </Field>
+        <Field ColumnSize="ColumnSize.IsFull">
+            <FieldLabel Class="col-form-label">Category</FieldLabel>
+            <FieldBody><Div>@habit.Category</Div></FieldBody>
+        </Field>
+        @if (habit.Category == HabitCategory.Other)
+        {
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label">Describe the category</FieldLabel>
+                <FieldBody><Div>@habit.CategoryDescription</Div></FieldBody>
+            </Field>
+        }
+    </Fields>
 </Jumbotron>
 
 @if (habit.ImplementationDetails != null)
 {
-	<Jumbotron Margin="Margin.Is4.FromBottom.Is0.FromTop" Padding="Padding.Is4.FromBottom.Is4.FromTop">
-		<Fields>
-			<Field ColumnSize="ColumnSize.IsFull">
-				<FieldLabel Class="col-form-label">How do you want to get the result?</FieldLabel>
-				<FieldBody>
-					<HabitSteps Steps="habit.ImplementationDetails.Steps" IsEditable="false"></HabitSteps>
-				</FieldBody>
-			</Field>
-			<Field ColumnSize="ColumnSize.IsFull">
-				<FieldLabel Class="col-form-label">What tools will you need?</FieldLabel>
-				<FieldBody><Div>@habit.ImplementationDetails.WithWhat</Div></FieldBody>
-			</Field>
-			<Field ColumnSize="ColumnSize.IsFull">
-				<FieldLabel Class="col-form-label">When will you practice the habit?</FieldLabel>
-				<FieldBody><Div>@habit.ImplementationDetails.When</Div></FieldBody>
-			</Field>
-			<Field ColumnSize="ColumnSize.IsFull">
-				<FieldLabel Class="col-form-label">Where will you practice the habit?</FieldLabel>
-				<FieldBody><Div>@habit.ImplementationDetails.Where</Div></FieldBody>
-			</Field>
-			<Field ColumnSize="ColumnSize.IsFull">
-				<FieldLabel Class="col-form-label">With whom will you practice the habit?</FieldLabel>
-				<FieldBody><Div>@habit.ImplementationDetails.WithWhom</Div></FieldBody>
-			</Field>
-		</Fields>
-	</Jumbotron>
+    <Jumbotron Margin="Margin.Is4.FromBottom.Is0.FromTop" Padding="Padding.Is4.FromBottom.Is4.FromTop">
+        <Fields>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label">How do you want to get the result?</FieldLabel>
+                <FieldBody>
+                    @* <HabitSteps Steps="habit.ImplementationDetails.Steps" IsEditable="false"></HabitSteps> *@
+                    <OrderedList>
+                        @foreach (var step in habit.ImplementationDetails.Steps.OrderBy(s => s.Sequence))
+                        {
+                            <OrderedListItem>@step.Step</OrderedListItem>
+                        }
+                    </OrderedList>
+                </FieldBody>
+            </Field>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label">What tools will you need?</FieldLabel>
+                <FieldBody><Div>@habit.ImplementationDetails.WithWhat</Div></FieldBody>
+            </Field>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label">When will you practice the habit?</FieldLabel>
+                <FieldBody><Div>@habit.ImplementationDetails.When</Div></FieldBody>
+            </Field>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label">Where will you practice the habit?</FieldLabel>
+                <FieldBody><Div>@habit.ImplementationDetails.Where</Div></FieldBody>
+            </Field>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label">With whom will you practice the habit?</FieldLabel>
+                <FieldBody><Div>@habit.ImplementationDetails.WithWhom</Div></FieldBody>
+            </Field>
+        </Fields>
+    </Jumbotron>
 }
 
 <Div TextAlignment="TextAlignment.Center">
-	@if (Id == Guid.Empty)
-	{
-		<Button Color="Color.Primary" Float="Float.End" Margin="Margin.Is2" Clicked="Submit">Submit</Button>
-		<Button Color="Color.Light" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>
-		<Button Color="Color.Warning" Float="Float.Start" Margin="Margin.Is2" Clicked="Previous">Previous</Button>
-	}
-	else
-	{
-		<Button Color="Color.Primary" Float="Float.Start" Margin="Margin.Is2" Type="ButtonType.Link" To="/">
-			<Icon Name="IconName.ArrowLeft" /> Back
-		</Button>
-	}
+    @if (Id == Guid.Empty)
+    {
+        <Button Color="Color.Primary" Float="Float.End" Margin="Margin.Is2" Clicked="Submit">Submit</Button>
+        <Button Color="Color.Light" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>
+        <Button Color="Color.Warning" Float="Float.Start" Margin="Margin.Is2" Clicked="Previous">Previous</Button>
+    }
+    else
+    {
+        <Button Color="Color.Primary" Float="Float.Start" Margin="Margin.Is2" Type="ButtonType.Link" To="/">
+            <Icon Name="IconName.ArrowLeft" /> Back
+        </Button>
+    }
 </Div>
 
 @code {
 
-	[Parameter]
-	public Guid Id { get; set; }
+    [Parameter]
+    public Guid Id { get; set; }
 
-	[Parameter]
-	public EventCallback OnSubmit { get; set; }
-	[Parameter]
-	public EventCallback OnCancel { get; set; }
-	[Parameter]
-	public EventCallback OnPrevious { get; set; }
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+    [Parameter]
+    public EventCallback OnPrevious { get; set; }
 
-	HabitModel habit = new();
-	List<string> steps = new();
+    HabitModel habit = new();
+    List<string> steps = new();
 
-	protected async override Task OnParametersSetAsync()
-	{
-		if (Id != Guid.Empty)
-		{
-			HabitState.CurrentHabit = await HabitService.GetHabit(Id);
-		}
+    protected async override Task OnParametersSetAsync()
+    {
+        if (Id != Guid.Empty)
+        {
+            HabitState.CurrentHabit = await HabitService.GetHabit(Id);
+        }
 
-		habit = HabitState.CurrentHabit;
-		steps = habit.ImplementationDetails.How.Split("\n").ToList();
-		StateHasChanged();
+        habit = HabitState.CurrentHabit;
+        StateHasChanged();
 
-		await base.OnParametersSetAsync();
-	}
+        await base.OnParametersSetAsync();
+    }
 
-	private async Task Submit()
-	{
-		await OnSubmit.InvokeAsync();
-	}
+    private async Task Submit()
+    {
+        await OnSubmit.InvokeAsync();
+    }
 
-	private async Task Cancel()
-	{
-		await OnCancel.InvokeAsync();
-	}
+    private async Task Cancel()
+    {
+        await OnCancel.InvokeAsync();
+    }
 
-	private async Task Previous()
-	{
-		await OnPrevious.InvokeAsync();
-	}
+    private async Task Previous()
+    {
+        await OnPrevious.InvokeAsync();
+    }
 }
