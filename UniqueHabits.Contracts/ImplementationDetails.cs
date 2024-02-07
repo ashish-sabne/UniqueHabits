@@ -2,18 +2,7 @@
 {
     public class ImplementationDetails
     {
-        public ImplementationDetails()
-        {
-            
-        }
-        public ImplementationDetails(string withWhat, string when, string where, string withWhom)
-        {
-            WithWhat = withWhat;
-            When = when;
-            Where = where;
-            WithWhom = withWhom;
-        }
-
+        public Guid Id { get; set; }
         public string WithWhat { get; set; }
         public string When { get; set; }
         public string Where { get; set; }

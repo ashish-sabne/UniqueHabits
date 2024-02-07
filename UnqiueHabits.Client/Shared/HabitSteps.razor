@@ -2,17 +2,21 @@
 {
     <Card Shadow="Shadow.Default" Margin="Margin.Is3.OnY">
         <CardBody>
-            <TextEdit @bind-Text="@newStepText" Placeholder="e.g. Save $10,000 in my bank account" />
+            <TextEdit @bind-Text="@newStepText" Placeholder="e.g. Prepare coffee at home than buying out." />
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <Paragraph TextColor="TextColor.Warning">@errorMessage</Paragraph>
+            }
         </CardBody>
         <CardFooter>
-            <Button Color="Color.Warning" Float="Float.Start" Margin="Margin.Is2" Clicked="AddStep">Add Step</Button>
+            <Button Disabled="@string.IsNullOrEmpty(newStepText)" Color="Color.Warning" Float="Float.Start" Margin="Margin.Is2" Clicked="AddStep">Add Step</Button>
         </CardFooter>
     </Card>
 }
 
-@if (Steps != null)
+@if (HabitState.CurrentHabit.ImplementationDetails.Steps != null)
 {
-    <DropContainer @ref="dropContainer" TItem="ImplementationStep" Items="@Steps" ItemsFilter="(i,s) => {return true;}" ItemDropped="@ItemDropped" Flex="Flex.Wrap.Grow.Is1">
+    <DropContainer @ref="dropContainer" TItem="ImplementationStep" Items="@HabitState.CurrentHabit.ImplementationDetails.Steps" ItemsFilter="(i,s) => {return true;}" ItemDropped="@ItemDropped" Flex="Flex.Wrap.Grow.Is1">
         <ChildContent>
             <DropZone @ref="dropZone" AllowReorder="IsEditable" DropAllowed="(i) => IsEditable" TItem="ImplementationStep" Name="Steps"
                       Border="Border.Rounded" Background="Background.Light" Padding="Padding.Is3" Margin="Margin.Is3" Flex="Flex.Grow.Is1">
@@ -35,9 +39,6 @@
     DropZone<ImplementationStep> dropZone;
 
     [Parameter]
-    public List<ImplementationStep> Steps { get; set; }
-
-    [Parameter]
     public bool IsEditable { get; set; }
 
     private Task ItemDropped(DraggableDroppedEventArgs<ImplementationStep> args)
@@ -48,46 +49,57 @@
         return Task.CompletedTask;
     }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-    }
-
-    string newStepText = "";
+    string newStepText = "", errorMessage = "";
 
     void RearrangeSteps(int targetSequence, ImplementationStep targetItem)
     {
         var newSteps = new List<ImplementationStep>();
 
-        newSteps.AddRange(Steps.Where(s => s.Id != targetItem.Id).OrderBy(s => s.Sequence));
+        newSteps.AddRange(HabitState.CurrentHabit.ImplementationDetails.Steps.Where(s => s.Id != targetItem.Id).OrderBy(s => s.Sequence));
         newSteps.Insert(targetSequence, targetItem);
 
-        Steps = newSteps;
+        HabitState.CurrentHabit.ImplementationDetails.Steps = newSteps;
         ReorderSteps();
     }
 
     void ReorderSteps()
     {
-        for (int index = 0; index < Steps.Count; index++)
+        for (int index = 0; index < HabitState.CurrentHabit.ImplementationDetails.Steps.Count; index++)
         {
-            Steps[index].Sequence = index + 1;
+            HabitState.CurrentHabit.ImplementationDetails.Steps[index].Sequence = index + 1;
         }
         dropContainer.Refresh();
     }
 
     void AddStep()
     {
-        if (!string.IsNullOrEmpty(newStepText))
+        if (!string.IsNullOrEmpty(newStepText) && ValidateNewStep())
         {
-            int newSequence = Steps.Count;
-            Steps.Add(new ImplementationStep
-            {
-                Id = Guid.NewGuid(),
-                Step = newStepText,
-                Sequence = newSequence
-            });
+
+            int newSequence = HabitState.CurrentHabit.ImplementationDetails.Steps.Count;
+            HabitState.CurrentHabit.ImplementationDetails.Steps.Add(new ImplementationStep
+                {
+                    Id = Guid.NewGuid(),
+                    Step = newStepText,
+                    Sequence = newSequence
+                });
             ReorderSteps();
             newStepText = "";
         }
+    }
+
+    bool ValidateNewStep()
+    {
+        if (HabitState.CurrentHabit.ImplementationDetails.Steps.Any(s => s.Step.Equals(newStepText, StringComparison.CurrentCultureIgnoreCase)))
+        {
+            errorMessage = "You have already recorded this step";
+            return false;
+        }
+        else
+        {
+            errorMessage = string.Empty;
+            return true;
+        }
+
     }
 }

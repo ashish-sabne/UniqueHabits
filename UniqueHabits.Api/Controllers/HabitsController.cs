@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using UniqueHabits.Contracts;
 using UniqueHabits.Data;
 using UniqueHabits.Domain.Aggregates;
+using ImplementationStep = UniqueHabits.Domain.Aggregates.ImplementationStep;
 
 namespace UniqueHabits.Api.Controllers
 {
@@ -49,10 +50,20 @@ namespace UniqueHabits.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddHabit([FromBody] Habit habit)
+        public async Task<IActionResult> AddHabit([FromBody] HabitModel habitModel)
         {
-            if (await _context.Habits.FindAsync(habit.Id) != null)
+            if (await _context.Habits.FindAsync(habitModel.Id) != null)
             {  return BadRequest(); }
+
+            var habit = Habit.Create(habitModel.Id, habitModel.SystemName, habitModel.MeasurableResult, habitModel.Why, habitModel.StartDate, habitModel.Category.GetValueOrDefault(),
+                habitModel.CategoryDescription);
+
+            var steps = habitModel.ImplementationDetails.Steps.Select(s => ImplementationStep.Create(s.Id, s.Step, s.Sequence)).ToList();
+
+            var implementation = Implementation.Create(habitModel.ImplementationDetails.Id, habitModel.Id, habitModel.ImplementationDetails.WithWhat, habitModel.ImplementationDetails.When,
+                            habitModel.ImplementationDetails.Where, habitModel.ImplementationDetails.WithWhom, steps);
+
+            habit.AddImplementation(implementation);
 
             await _context.Habits.AddAsync(habit);
             await _context.SaveChangesAsync();

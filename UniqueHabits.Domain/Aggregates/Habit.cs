@@ -26,5 +26,15 @@ namespace UniqueHabits.Domain.Aggregates
         public string CategoryDescription { get; private set; }
 
         public virtual List<Implementation> Implementations { get; private set; } = new();
+
+        public static Habit Create(Guid id, string systemName, string measurableResult, string why, DateTime startDate, HabitCategory category, string categoryDescription)
+        {
+            return new Habit(id, systemName, measurableResult, why, startDate, category, categoryDescription);
+        }
+
+        public void AddImplementation(Implementation implementation)
+        {
+            Implementations.Add(implementation);
+        }
     }
 }

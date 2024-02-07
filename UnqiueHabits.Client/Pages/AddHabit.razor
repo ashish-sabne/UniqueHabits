@@ -2,6 +2,7 @@
 @using UnqiueHabits.Contracts;
 @inject HabitService HabitService
 @inject NavigationManager Navigation
+@inject HabitState HabitState
 
 <PageTitle>Add Habit</PageTitle>
 
@@ -48,7 +49,7 @@
 </Steps>
 
 @code {
-    private HabitModel habit = HabitState.CurrentHabit;
+    HabitModel habit = HabitState.CurrentHabit;
 
     private Steps stepsRef;
     private string selectedStep = "Start";
@@ -64,14 +65,15 @@
 
     async Task HabitCreated()
     {
-        /*if (habit.ImplementationDetails == null)
-            habit.AddImplementationDetails();*/
+        if (habit.ImplementationDetails != null)
+            habit.ImplementationDetails.Id = Guid.NewGuid();
         habitStarted = true;
         await stepsRef.NextStep();
     }
 
     async Task HabitDetailsAdded()
     {
+        habit = HabitState.CurrentHabit;
         habitDetailsAdded = true;
         await stepsRef.NextStep();
     }
@@ -87,9 +89,9 @@
         GoToHomePage();
     }
 
-    void SubmitHabit()
+    async Task SubmitHabit()
     {
-        //HabitService.AddHabit(habit);
+        await HabitService.AddHabit(habit);
         CancelHabit();
     }
 

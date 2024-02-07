@@ -121,6 +121,7 @@
 
     private async Task Submit()
     {
+        habit = HabitState.CurrentHabit;
         await OnSubmit.InvokeAsync();
     }
 

@@ -36,5 +36,18 @@ namespace UnqiueHabits.Contracts
                 throw;
             }
         }
+
+        public async Task AddHabit(HabitModel habit)
+        {
+            try
+            {
+                var result = await _httpClient.PostAsJsonAsync("api/Habits", habit);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }
