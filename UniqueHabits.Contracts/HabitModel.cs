@@ -10,7 +10,7 @@ namespace UniqueHabits.Contracts
         public string Why { get; set; }
         public DateTime StartDate { get; set; } = DateTime.Today;
         public HabitCategory? Category { get; set; }
-        public string CategoryDescription { get; set; }
+        public string? CategoryDescription { get; set; }
 
         public ImplementationDetails ImplementationDetails { get; set; } = new ImplementationDetails();
 

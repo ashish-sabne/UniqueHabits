@@ -55,19 +55,27 @@ namespace UniqueHabits.Api.Controllers
             if (await _context.Habits.FindAsync(habitModel.Id) != null)
             {  return BadRequest(); }
 
-            var habit = Habit.Create(habitModel.Id, habitModel.SystemName, habitModel.MeasurableResult, habitModel.Why, habitModel.StartDate, habitModel.Category.GetValueOrDefault(),
-                habitModel.CategoryDescription);
+            try
+            {
+                var habit = Habit.Create(habitModel.Id, habitModel.SystemName, habitModel.MeasurableResult, habitModel.Why, habitModel.StartDate, habitModel.Category.GetValueOrDefault(),
+                        habitModel.CategoryDescription);
 
-            var steps = habitModel.ImplementationDetails.Steps.Select(s => ImplementationStep.Create(s.Id, s.Step, s.Sequence)).ToList();
+                var steps = habitModel.ImplementationDetails.Steps.Select(s => ImplementationStep.Create(s.Id, s.Step, s.Sequence)).ToList();
 
-            var implementation = Implementation.Create(habitModel.ImplementationDetails.Id, habitModel.Id, habitModel.ImplementationDetails.WithWhat, habitModel.ImplementationDetails.When,
-                            habitModel.ImplementationDetails.Where, habitModel.ImplementationDetails.WithWhom, steps);
+                var implementation = Implementation.Create(habitModel.ImplementationDetails.Id, habitModel.Id, habitModel.ImplementationDetails.WithWhat, habitModel.ImplementationDetails.When,
+                                habitModel.ImplementationDetails.Where, habitModel.ImplementationDetails.WithWhom, steps);
 
-            habit.AddImplementation(implementation);
+                habit.AddImplementation(implementation);
 
-            await _context.Habits.AddAsync(habit);
-            await _context.SaveChangesAsync();
-            return Ok();
+                await _context.Habits.AddAsync(habit);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                throw;
+            }
         }
     }
 }

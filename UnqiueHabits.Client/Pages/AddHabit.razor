@@ -65,8 +65,6 @@
 
     async Task HabitCreated()
     {
-        if (habit.ImplementationDetails != null)
-            habit.ImplementationDetails.Id = Guid.NewGuid();
         habitStarted = true;
         await stepsRef.NextStep();
     }
@@ -91,8 +89,10 @@
 
     async Task SubmitHabit()
     {
-        await HabitService.AddHabit(habit);
-        CancelHabit();
+        var result = await HabitService.AddHabit(habit);
+        if(result.IsSuccessStatusCode)
+            CancelHabit();
+        //TODO Error handling
     }
 
     void GoToHomePage()

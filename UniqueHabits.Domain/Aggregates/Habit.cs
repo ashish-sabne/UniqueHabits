@@ -23,7 +23,7 @@ namespace UniqueHabits.Domain.Aggregates
         public string Why { get; private set; }
         public DateTime StartDate { get; private set; }
         public HabitCategory Category { get; private set; }
-        public string CategoryDescription { get; private set; }
+        public string? CategoryDescription { get; private set; }
 
         public virtual List<Implementation> Implementations { get; private set; } = new();
 

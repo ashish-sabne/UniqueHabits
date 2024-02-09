@@ -37,11 +37,12 @@ namespace UnqiueHabits.Contracts
             }
         }
 
-        public async Task AddHabit(HabitModel habit)
+        public async Task<HttpResponseMessage> AddHabit(HabitModel habit)
         {
             try
             {
-                var result = await _httpClient.PostAsJsonAsync("api/Habits", habit);
+                var result = await _httpClient.PostAsJsonAsync("api/habits", habit);
+                return result;
             }
             catch (Exception)
             {

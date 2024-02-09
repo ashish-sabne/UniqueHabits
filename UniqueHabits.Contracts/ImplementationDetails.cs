@@ -2,7 +2,7 @@
 {
     public class ImplementationDetails
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string WithWhat { get; set; }
         public string When { get; set; }
         public string Where { get; set; }
