@@ -1,6 +1,6 @@
 ﻿<EditForm Model="@implementation" OnValidSubmit="AddImplementationDetails">
     <Field ColumnSize="ColumnSize.IsFull">
-        <FieldLabel Class="col-form-label" RequiredIndicator>How do you want to get the result?</FieldLabel>
+        <FieldLabel Class="col-form-label" RequiredIndicator>What steps will you take to get the result?</FieldLabel>
         <FieldBody>
             @if (implementation.Steps != null)
             {
@@ -9,17 +9,6 @@
         </FieldBody>
     </Field>
     <Validations @ref="@fluentValidations" Mode="ValidationMode.Auto" Model="@implementation" HandlerType="typeof(FluentValidationHandler)">
-        @* <Validation>
-            <Field ColumnSize="ColumnSize.IsFull">
-                <FieldLabel Class="col-form-label" RequiredIndicator>How do you want to get the result?</FieldLabel>
-                <FieldBody>
-                    @if (implementation.Steps != null)
-                    {
-                        <HabitSteps Steps="@implementation.Steps" IsEditable="true"></HabitSteps>
-                    }
-                </FieldBody>
-            </Field>
-        </Validation> *@
         <Validation>
             <Field ColumnSize="ColumnSize.IsFull">
                 <FieldLabel Class="col-form-label" RequiredIndicator>What tools will you need?</FieldLabel>
