@@ -9,6 +9,7 @@
                             <ValidationError />
                         </Feedback>
                     </TextEdit>
+                    <ValidationMessage For="@(() => habit.SystemName)" />
                 </FieldBody>
             </Field>
         </Validation>
@@ -21,6 +22,7 @@
                             <ValidationError />
                         </Feedback>
                     </TextEdit>
+                    <ValidationMessage For="@(() => habit.MeasurableResult)" />
                 </FieldBody>
             </Field>
         </Validation>
@@ -41,6 +43,7 @@
                             <ValidationError />
                         </Feedback>
                     </DateEdit>
+                    <ValidationMessage For="@(() => habit.StartDate)" />
                 </FieldBody>
             </Field>
         </Validation>
@@ -60,6 +63,7 @@
                             <ValidationError />
                         </Feedback>
                     </Select>
+                    <ValidationMessage For="@(() => habit.Category)" />
                 </FieldBody>
             </Field>
         </Validation>
@@ -69,7 +73,11 @@
                 <Field ColumnSize="ColumnSize.IsFull">
                     <FieldLabel Class="col-form-label" RequiredIndicator>Describe the category</FieldLabel>
                 <FieldBody>
-                    <TextEdit @bind-Text="@habit.CategoryDescription" class="form-control" placeholder="e.g. Service"></TextEdit>
+                    <TextEdit @bind-Text="@habit.CategoryDescription" class="form-control" placeholder="e.g. Service">
+                         <Feedback>
+                             <ValidationError />
+                         </Feedback>
+                    </TextEdit>
                     <ValidationMessage For="@(() => habit.CategoryDescription)" />
                 </FieldBody>
             </Field>

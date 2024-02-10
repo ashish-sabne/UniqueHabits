@@ -26,10 +26,25 @@
             <Card Shadow="Shadow.Default" Margin="Margin.Is3.OnY">
                 <CardBody>
                     @context.Step
+                    <Button Clicked="() => ConfirmRemoveStep(context.Id)" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Remove Step">
+                        <Icon Name="IconName.Delete" TextColor="TextColor.Danger" />
+                    </Button>
                 </CardBody>
             </Card>
         </ItemTemplate>
     </DropContainer>
+
+    @if (confirmModalId != Guid.Empty)
+    {
+        <ConfirmModal ConfirmTitle="Remove Step" ConfirmText="remove this step?" OnConfirm="() => RemoveStep(confirmModalId)" OnCancel="CancelRemoveStep"></ConfirmModal>
+    }
+
+    if (!HabitState.CurrentHabit.ImplementationDetails.Steps.Any())
+    {
+        <Paragraph TextColor="TextColor.Danger">
+            No steps added
+        </Paragraph>
+    }
 }
 
 
@@ -40,6 +55,8 @@
 
     [Parameter]
     public bool IsEditable { get; set; }
+
+    Guid confirmModalId = Guid.Empty;
 
     private Task ItemDropped(DraggableDroppedEventArgs<ImplementationStep> args)
     {
@@ -85,6 +102,27 @@
                 });
             ReorderSteps();
             newStepText = "";
+        }
+    }
+
+    void ConfirmRemoveStep(Guid stepId)
+    {
+        confirmModalId = stepId;
+    }
+
+    void CancelRemoveStep()
+    {
+        confirmModalId = Guid.Empty;
+    }
+
+    void RemoveStep(Guid stepId)
+    {
+        CancelRemoveStep();
+        var step = HabitState.CurrentHabit.ImplementationDetails.Steps.FirstOrDefault(s => s.Id == stepId);
+        if (step != null)
+        {
+            HabitState.CurrentHabit.ImplementationDetails.Steps.Remove(step);
+            ReorderSteps();
         }
     }
 

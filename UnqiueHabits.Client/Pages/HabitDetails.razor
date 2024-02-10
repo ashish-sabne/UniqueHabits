@@ -1,13 +1,13 @@
 ﻿<EditForm Model="@implementation" OnValidSubmit="AddImplementationDetails">
-    <Field ColumnSize="ColumnSize.IsFull">
-        <FieldLabel Class="col-form-label" RequiredIndicator>What steps will you take to get the result?</FieldLabel>
-        <FieldBody>
-            @if (implementation.Steps != null)
-            {
-                <HabitSteps IsEditable="true"></HabitSteps>
-            }
-        </FieldBody>
-    </Field>
+    @if (implementation.Steps != null)
+    {
+        <Field ColumnSize="ColumnSize.IsFull">
+            <FieldLabel Class="col-form-label" RequiredIndicator>What steps will you take to get the result?</FieldLabel>
+             <FieldBody>
+                 <HabitSteps IsEditable="true"></HabitSteps>
+             </FieldBody>
+         </Field>
+    }
     <Validations @ref="@fluentValidations" Mode="ValidationMode.Auto" Model="@implementation" HandlerType="typeof(FluentValidationHandler)">
         <Validation>
             <Field ColumnSize="ColumnSize.IsFull">
@@ -87,7 +87,7 @@
     private async Task AddImplementationDetails()
     {
         HabitState.CurrentHabit.ImplementationDetails = implementation;
-        if (await fluentValidations.ValidateAll())
+        if (await fluentValidations.ValidateAll() && implementation.Steps.Any())
             await OnSubmit.InvokeAsync();
     }
 

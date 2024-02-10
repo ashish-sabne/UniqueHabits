@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniqueHabits.Api", "UniqueH
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniqueHabits.Data", "UniqueHabits.Data\UniqueHabits.Data.csproj", "{5AD32A2C-E284-43E4-9DAD-3DD8ECD01C74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniqueHabits.Domain", "UniqueHabits.Domain\UniqueHabits.Domain.csproj", "{476AED8F-E702-406D-BAFD-C828D2E41E8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniqueHabits.Domain", "UniqueHabits.Domain\UniqueHabits.Domain.csproj", "{476AED8F-E702-406D-BAFD-C828D2E41E8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

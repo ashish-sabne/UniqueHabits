@@ -1,0 +1,50 @@
+﻿<Modal @ref="modalRef">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>@ConfirmTitle</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+            Are you sure you want to @ConfirmText ?
+        </ModalBody>
+        <ModalFooter>
+            <Button Color="Color.Danger" Clicked="Confirm">Yes</Button>
+            <Button Color="Color.Secondary" Clicked="Cancel">No</Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code {
+    private Modal modalRef;
+
+    [Parameter]
+    public string ConfirmTitle { get; set; } = "Confirm Action";
+
+    [Parameter]
+    public string ConfirmText { get; set; } = "do this";
+
+    [Parameter]
+    public EventCallback OnConfirm { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        modalRef?.Show();
+    }
+
+    async Task Confirm()
+    {
+        await OnConfirm.InvokeAsync();
+    }
+    
+    async Task Cancel()
+    {
+        await OnCancel.InvokeAsync();
+    }
+
+    void HideModal()
+    {
+        modalRef?.Hide();
+    }
+}

@@ -7,46 +7,46 @@
 <h2>Hello, world!</h2>
 
 <LoadingIndicator @bind-Visible="showLoading">
-@if (!showLoading && !Habits.Any())
-{
-    <Card>
-        <CardBody>
+    @if (!showLoading && !Habits.Any())
+    {
+        <Card>
             <CardTitle Size="5">
                 You have not recorded any habits so far.
             </CardTitle>
-            <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
-                This app allows you to track a habit according to Dave Crenshaw&apos;s LinkedIn Learning course "Unique Habits: Be Successful Your Own Way".
-            </CardText>
-            <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="/add-habit">
-                Add a Habit <Icon Name="IconName.ArrowRight" />
-            </Button>
-            <Button Color="Color.Secondary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="https://www.linkedin.com/learning/unique-habits-be-successful-your-own-way?u=2254210" Target="Target.Blank">
-                Watch Course <Icon Name="IconName.ArrowRight" />
-            </Button>
-        </CardBody>
-    </Card>
-}
-else
-{
-    <CardDeck>
-    @foreach (var habit in Habits)
-    {
-        <Card>
             <CardBody>
-                <CardTitle Size="5">
-                    @habit.SystemName
-                </CardTitle>
                 <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
-                    @habit.MeasurableResult
+                    This app allows you to track a habit according to Dave Crenshaw&apos;s LinkedIn Learning course "Unique Habits: Be Successful Your Own Way".
                 </CardText>
-                <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/details/{habit.Id}")">
-                    Read more <Icon Name="IconName.ArrowRight" />
+                <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="/add-habit">
+                    Add a Habit <Icon Name="IconName.ArrowRight" />
+                </Button>
+                <Button Color="Color.Secondary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="https://www.linkedin.com/learning/unique-habits-be-successful-your-own-way?u=2254210" Target="Target.Blank">
+                    Watch Course <Icon Name="IconName.ArrowRight" />
                 </Button>
             </CardBody>
         </Card>
     }
-    </CardDeck>
-}
+    else
+    {
+        <CardDeck>
+            @foreach (var habit in Habits)
+            {
+                <Card>
+                    <CardBody>
+                        <CardTitle Size="5">
+                            @habit.SystemName
+                        </CardTitle>
+                        <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
+                            @habit.MeasurableResult
+                        </CardText>
+                        <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/details/{habit.Id}")">
+                            Read more <Icon Name="IconName.ArrowRight" />
+                        </Button>
+                    </CardBody>
+                </Card>
+            }
+        </CardDeck>
+    }
 </LoadingIndicator>
 
 @code {
