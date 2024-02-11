@@ -90,6 +90,7 @@
     async Task SubmitHabit()
     {
         var result = await HabitService.AddHabit(habit);
+        var request = await result.RequestMessage.Content.ReadAsStringAsync();
         if(result.IsSuccessStatusCode)
             CancelHabit();
         //TODO Error handling

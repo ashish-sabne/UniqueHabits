@@ -20,7 +20,7 @@ namespace UniqueHabits.Domain.Aggregates
         public Guid Id { get; private set; }
         public string SystemName { get; private set; }
         public string MeasurableResult { get; private set; }
-        public string Why { get; private set; }
+        public string? Why { get; private set; }
         public DateTime StartDate { get; private set; }
         public HabitCategory Category { get; private set; }
         public string? CategoryDescription { get; private set; }

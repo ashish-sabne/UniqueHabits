@@ -25,10 +25,7 @@
         <ItemTemplate>
             <Card Shadow="Shadow.Default" Margin="Margin.Is3.OnY">
                 <CardBody>
-                    @context.Step
-                    <Button Clicked="() => ConfirmRemoveStep(context.Id)" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Remove Step">
-                        <Icon Name="IconName.Delete" TextColor="TextColor.Danger" />
-                    </Button>
+                   <HabitStep Step="@context" OnRemove="ConfirmRemoveStep" />
                 </CardBody>
             </Card>
         </ItemTemplate>

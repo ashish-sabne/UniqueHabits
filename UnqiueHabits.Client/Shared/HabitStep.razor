@@ -1,0 +1,68 @@
+﻿@if (Step != null && Step.Id != Guid.Empty)
+{
+    if (!IsEditable)
+    {
+        <Grid>
+            <Column><Badge Color="Color.Success" Pill>@Step.Sequence</Badge></Column>
+            <Column ColumnSize="ColumnSize.Is11">
+                @Step.Step
+                <Button Clicked="EditStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Edit Step">
+                    <Icon Name="IconName.Pen" TextColor="TextColor.Primary" />
+                </Button>
+                <Button Clicked="RemoveStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Remove Step">
+                    <Icon Name="IconName.Delete" TextColor="TextColor.Danger" />
+                </Button>
+            </Column>
+        </Grid>
+    }
+    else
+    {
+        <TextEdit @bind-Text="@StepText" />
+        <Button Clicked="SaveStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Save Changes">
+            <Icon Name="IconName.Save" TextColor="TextColor.Primary" />
+        </Button>
+        <Button Clicked="CancelStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Cancel Changes">
+            <Icon Name="IconName.Backspace" TextColor="TextColor.Secondary" />
+        </Button>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public ImplementationStep Step { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnRemove { get; set; }
+
+    public bool IsEditable { get; set; }
+
+    private string StepText { get; set; } = string.Empty;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+    }
+
+    private void EditStep()
+    {
+        StepText = Step.Step;
+        IsEditable = true;
+    }
+
+    private void SaveStep()
+    {
+        Step.Step = StepText;
+        CancelStep();
+    }
+
+    private void CancelStep()
+    {
+        IsEditable = false;
+    }
+
+    async Task RemoveStep()
+    {
+        await OnRemove.InvokeAsync(Step.Id);
+    }
+}

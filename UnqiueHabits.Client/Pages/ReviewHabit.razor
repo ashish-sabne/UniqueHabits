@@ -47,13 +47,17 @@
             <Field ColumnSize="ColumnSize.IsFull">
                 <FieldLabel Class="col-form-label">How do you want to get the result?</FieldLabel>
                 <FieldBody>
-                    @* <HabitSteps Steps="habit.ImplementationDetails.Steps" IsEditable="false"></HabitSteps> *@
-                    <OrderedList>
+                    <ListGroup Flush>
                         @foreach (var step in habit.ImplementationDetails.Steps.OrderBy(s => s.Sequence))
                         {
-                            <OrderedListItem>@step.Step</OrderedListItem>
+                            <ListGroupItem>
+                                <Grid>
+                                    <Column><Badge Color="Color.Success" Pill>@step.Sequence</Badge></Column>
+                                    <Column ColumnSize="ColumnSize.Is11">@step.Step</Column>
+                                </Grid>
+                            </ListGroupItem>
                         }
-                    </OrderedList>
+                    </ListGroup>
                 </FieldBody>
             </Field>
             <Field ColumnSize="ColumnSize.IsFull">
