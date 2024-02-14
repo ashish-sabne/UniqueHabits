@@ -89,7 +89,7 @@
     async Task SubmitHabit()
     {
         var result = await HabitService.AddHabit(habit);
-        if(result.IsSuccessStatusCode)
+        if(result.IsSuccess)
             CancelHabit();
         //TODO Error handling
     }

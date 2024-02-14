@@ -6,7 +6,7 @@
 <h2>Hello, world!</h2>
 
 <LoadingIndicator @bind-Visible="showLoading">
-    @if (!showLoading && !Habits.Any())
+    @if (!showLoading && !Habits.IsAny())
     {
         <Card>
             <CardTitle Size="5">
@@ -49,11 +49,18 @@
 @code {
     List<HabitModel> Habits = new();
     bool showLoading = true;
+
     protected override async Task OnInitializedAsync()
     {
         showLoading = true;
-        Habits = await HabitService.GetHabits();
+        var result = await HabitService.GetHabits();
         showLoading = false;
+
+        if(result.IsSuccess)
+        {
+            Habits = result.Value;
+        }
+
         await base.OnInitializedAsync();
     }
 }

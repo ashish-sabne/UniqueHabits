@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Json;
+using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
+using UniqueHabits.Shared.Helpers;
 
 namespace UniqueHabits.Contracts.Services
 {
@@ -12,42 +14,73 @@ namespace UniqueHabits.Contracts.Services
             _httpClient = httpClient;
         }
 
-        public async Task<List<HabitModel>> GetHabits()
+        public async Task<ApiResult<List<HabitModel>>> GetHabits()
         {
             try
             {
                 var habits = await _httpClient.GetFromJsonAsync<List<HabitModel>>("api/Habits");
-                return habits ?? new List<HabitModel>();
+                if (habits.IsAny())
+                {
+                    return ApiResult<List<HabitModel>>.Success(habits);
+                }
+                else if (habits != null)
+                {
+                    return ApiResult<List<HabitModel>>.Success(new List<HabitModel>());
+                }
+                else
+                {
+                    return ApiResult<List<HabitModel>>.Failure();
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return ApiResult<List<HabitModel>>.Failure(ex.Message);
             }
         }
-        public async Task<HabitModel> GetHabit(Guid habitId)
+
+        public async Task<ApiResult<HabitModel>> GetHabit(Guid habitId)
         {
             try
             {
                 var habit = await _httpClient.GetFromJsonAsync<HabitModel>($"api/Habits/{habitId}");
-                return habit;
+
+                if (habit != null)
+                {
+                    return ApiResult<HabitModel>.Success(habit);
+                }
+                else
+                {
+                    return ApiResult<HabitModel>.Failure("Habit not found!");
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                return ApiResult<HabitModel>.Failure(ex.Message);
             }
         }
 
-        public async Task<HttpResponseMessage> AddHabit(HabitModel habit)
+        public async Task<ApiResult> AddHabit(HabitModel habit)
         {
             try
             {
                 var result = await _httpClient.PostAsJsonAsync("api/habits", habit);
-                return result;
-            }
-            catch (Exception)
-            {
 
-                throw;
+                if (result != null)
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        return ApiResult.Success();
+                    }
+                    else
+                    {
+                        return ApiResult.Failure($"Error adding habit: {result.ReasonPhrase}");
+                    }
+                }
+                return ApiResult.Failure();
+            }
+            catch (Exception ex)
+            {
+                return ApiResult.Failure(ex.Message);
             }
         }
     }

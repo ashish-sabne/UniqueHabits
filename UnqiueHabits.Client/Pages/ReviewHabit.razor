@@ -113,7 +113,12 @@
     {
         if (Id != Guid.Empty)
         {
-            HabitState.CurrentHabit = await HabitService.GetHabit(Id);
+            var result = await HabitService.GetHabit(Id);
+
+            if (result.IsSuccess)
+            {
+                HabitState.CurrentHabit = result.Value;
+            }
         }
 
         habit = HabitState.CurrentHabit;
@@ -124,7 +129,6 @@
 
     private async Task Submit()
     {
-        habit = HabitState.CurrentHabit;
         await OnSubmit.InvokeAsync();
     }
 
