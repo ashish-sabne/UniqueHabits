@@ -47,7 +47,30 @@
     </Content>
 </Steps>
 
+<Snackbar @ref="snackbarSuccess" Color="SnackbarColor.Success">
+    <SnackbarBody>
+        Habit Created Successfully
+        <SnackbarAction Clicked="@(()=>snackbarSuccess.Hide())">
+            <Icon Name="Blazorise.Icons.Material.MaterialIcons.Close" />
+        </SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
+
+<Snackbar @ref="snackbarError" Color="SnackbarColor.Danger">
+    <SnackbarBody>
+        @errorMessage
+        <SnackbarAction Clicked="@(()=>snackbarError.Hide())">
+            <Icon Name="Blazorise.Icons.Material.MaterialIcons.Close" />
+        </SnackbarAction>
+    </SnackbarBody>
+</Snackbar>
+
+
+
 @code {
+
+    [Inject] INotificationService NotificationService { get; set; }
+
     HabitModel habit = HabitState.CurrentHabit;
 
     private Steps stepsRef;
@@ -55,6 +78,11 @@
 
     bool habitStarted = false;
     bool habitDetailsAdded = false;
+
+    bool? habitCreated;
+    string? errorMessage;
+
+    Snackbar snackbarSuccess, snackbarError;
 
     protected override void OnInitialized()
     {
@@ -90,8 +118,19 @@
     {
         var result = await HabitService.AddHabit(habit);
         if(result.IsSuccess)
+        {
+            //await NotificationService.Success("Habit added successfully!", "Success!");
+            habitCreated = true;
+            await snackbarSuccess.Show();
             CancelHabit();
-        //TODO Error handling
+        }
+        else
+        {
+            //await NotificationService.Error($"Error adding habit - {result.Message}", "Error!");
+            errorMessage = $"Error adding habit - {result.Message}";
+            habitCreated = false;
+            await snackbarError.Show();
+        }
     }
 
     void GoToHomePage()
