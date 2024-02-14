@@ -5,9 +5,9 @@ using Blazorise.Material;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using UniqueHabits.Contracts.Services;
 using UniqueHabits.Contracts.Validators;
 using UnqiueHabits.Client;
-using UnqiueHabits.Contracts;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

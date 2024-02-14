@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using UniqueHabits.Contracts;
+using UniqueHabits.Contracts.Models;
 using UniqueHabits.Domain.Aggregates;
 
 namespace UniqueHabits.Api.AutoMapper
@@ -14,7 +14,7 @@ namespace UniqueHabits.Api.AutoMapper
             CreateMap<Implementation, ImplementationDetails>()
                 .ForMember(dest => dest.Steps, opt => opt.MapFrom(src => src.Steps.OrderBy(s => s.Sequence)));
 
-            CreateMap<Domain.Aggregates.ImplementationStep, Contracts.ImplementationStep>();
+            CreateMap<Domain.Aggregates.ImplementationStep, Contracts.Models.ImplementationStep>();
         }
     }
 }

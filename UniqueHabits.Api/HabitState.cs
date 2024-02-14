@@ -1,4 +1,4 @@
-﻿using UniqueHabits.Contracts;
+﻿using UniqueHabits.Contracts.Models;
 
 namespace UniqueHabits.Api
 {

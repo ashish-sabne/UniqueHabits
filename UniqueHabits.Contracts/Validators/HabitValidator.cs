@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using UniqueHabits.Contracts.Models;
 using UniqueHabits.Shared.Enums;
 
 namespace UniqueHabits.Contracts.Validators

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UniqueHabits.Contracts;
+using UniqueHabits.Contracts.Models;
 using UniqueHabits.Data;
 using UniqueHabits.Domain.Aggregates;
 using ImplementationStep = UniqueHabits.Domain.Aggregates.ImplementationStep;

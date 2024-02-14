@@ -1,4 +1,4 @@
-﻿namespace UniqueHabits.Contracts
+﻿namespace UniqueHabits.Contracts.Models
 {
     public class ImplementationDetails
     {

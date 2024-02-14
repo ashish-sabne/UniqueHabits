@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UniqueHabits.Contracts
+namespace UniqueHabits.Contracts.Models
 {
     public class ImplementationStep
     {

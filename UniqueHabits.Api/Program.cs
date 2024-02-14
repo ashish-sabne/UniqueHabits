@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using UniqueHabits.Data;
-using UnqiueHabits.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 

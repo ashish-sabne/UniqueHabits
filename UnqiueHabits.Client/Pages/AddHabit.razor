@@ -1,5 +1,4 @@
 ﻿@page "/add-habit"
-@using UnqiueHabits.Contracts;
 @inject HabitService HabitService
 @inject NavigationManager Navigation
 @inject HabitState HabitState
@@ -90,7 +89,6 @@
     async Task SubmitHabit()
     {
         var result = await HabitService.AddHabit(habit);
-        var request = await result.RequestMessage.Content.ReadAsStringAsync();
         if(result.IsSuccessStatusCode)
             CancelHabit();
         //TODO Error handling

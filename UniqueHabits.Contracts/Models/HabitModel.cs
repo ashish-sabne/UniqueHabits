@@ -1,6 +1,6 @@
 ﻿using UniqueHabits.Shared.Enums;
 
-namespace UniqueHabits.Contracts
+namespace UniqueHabits.Contracts.Models
 {
     public class HabitModel
     {

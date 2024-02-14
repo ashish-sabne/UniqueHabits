@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
-using UniqueHabits.Contracts;
+using UniqueHabits.Contracts.Models;
 
-namespace UnqiueHabits.Contracts
+namespace UniqueHabits.Contracts.Services
 {
     public class HabitService
     {
