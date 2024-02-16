@@ -29,19 +29,7 @@
     {
         @foreach (var habit in Habits)
         {
-            <Card Margin="Margin.Is2.FromBottom">
-                <CardBody>
-                    <CardTitle Size="5">
-                        <Heading Size="HeadingSize.Is5">@habit.SystemName</Heading>
-                    </CardTitle>
-                    <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
-                        @habit.MeasurableResult
-                    </CardText>
-                    <Button Size="Size.ExtraSmall" Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/details/{habit.Id}")">
-                        Read more <Icon Name="IconName.ArrowRight" />
-                    </Button>
-                </CardBody>
-            </Card>
+            <HabitCard Habit="habit" />
         }
     }
 </LoadingIndicator>

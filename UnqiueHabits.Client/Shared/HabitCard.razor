@@ -1,0 +1,21 @@
+﻿@if (Habit != null)
+{
+    <Card Margin="Margin.Is2.FromBottom">
+        <CardBody>
+            <CardTitle Size="5">
+                <Heading Size="HeadingSize.Is5">@Habit.SystemName</Heading>
+            </CardTitle>
+            <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
+                @Habit.MeasurableResult
+            </CardText>
+            <Button Size="Size.ExtraSmall" Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/details/{Habit.Id}")">
+                Read more <Icon Name="IconName.ArrowRight" />
+            </Button>
+        </CardBody>
+    </Card>
+}
+
+@code {
+    [Parameter]
+    public HabitModel Habit { get; set; }
+}

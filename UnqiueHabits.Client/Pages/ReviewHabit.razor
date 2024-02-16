@@ -1,6 +1,8 @@
 ﻿@page "/details/{Id:guid?}"
 @inject HabitService HabitService
 
+<PageTitle>@(Id == Guid.Empty ? "Review Habit Details" : "Habit Details")</PageTitle>
+
 <h5>Review Habit Details</h5>
 @if (Id == Guid.Empty)
 {

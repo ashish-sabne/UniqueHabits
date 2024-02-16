@@ -1,4 +1,6 @@
-﻿<EditForm Model="@implementation" OnValidSubmit="AddImplementationDetails">
+﻿<PageTitle>Habit Details</PageTitle>
+
+<EditForm Model="@implementation" OnValidSubmit="AddImplementationDetails">
     @if (implementation.Steps != null)
     {
         <Field ColumnSize="ColumnSize.IsFull">
