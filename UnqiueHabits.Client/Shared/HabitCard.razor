@@ -2,15 +2,22 @@
 {
     <Card Margin="Margin.Is2.FromBottom">
         <CardBody>
-            <CardTitle Size="5">
-                <Heading Size="HeadingSize.Is5">@Habit.SystemName</Heading>
-            </CardTitle>
-            <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
-                @Habit.MeasurableResult
-            </CardText>
-            <Button Size="Size.ExtraSmall" Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/details/{Habit.Id}")">
-                Read more <Icon Name="IconName.ArrowRight" />
-            </Button>
+            <Row>
+                <Column ColumnSize="ColumnSize.Is1">
+                    <Icon Style="@CategoryIconStyle" Name="@CategoryIcon" IconSize="IconSize.x4" TextColor="TextColor.Success" title="@Habit.Category.GetValueOrDefault().GetDescription()" />
+                </Column>
+                <Column ColumnSize="ColumnSize.Is11">
+                    <CardTitle Size="5">
+                        <Heading Size="HeadingSize.Is5">@Habit.SystemName</Heading>
+                    </CardTitle>
+                    <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
+                        @Habit.MeasurableResult
+                    </CardText>
+                    <Button Color="Color.Success" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/details/{Habit.Id}")">
+                        Read more <Icon Name="IconName.ArrowRight" />
+                    </Button>
+                </Column>
+            </Row>
         </CardBody>
     </Card>
 }
@@ -18,4 +25,30 @@
 @code {
     [Parameter]
     public HabitModel Habit { get; set; }
+
+    private string CategoryIcon;
+    private string CategoryIconStyle = "cursor: default;";
+
+    protected override void OnParametersSet()
+    {
+        switch (Habit.Category)
+        {
+            case HabitCategory.Personal:
+                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Person;
+                break;
+            case HabitCategory.Career:
+                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Work;
+                break;
+            case HabitCategory.Health:
+                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.FitnessCenter;
+                break;
+            case HabitCategory.Relationships:
+                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Favorite;
+                break;
+            default:
+                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.LiveHelp;
+                break;
+        }
+        base.OnParametersSet();
+    }
 }
