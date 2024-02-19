@@ -41,7 +41,7 @@
         <StepPanel Name="Review">
             @if (habitDetailsAdded)
             {
-                <ReviewHabit OnSubmit="SubmitHabit" OnCancel="CancelHabit" OnPrevious="GoToPreviousStep"></ReviewHabit>
+                <ConfirmHabit OnSubmit="SubmitHabit" OnCancel="CancelHabit" OnPrevious="GoToPreviousStep"></ConfirmHabit>
             }
         </StepPanel>
     </Content>

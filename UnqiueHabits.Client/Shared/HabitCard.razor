@@ -4,7 +4,7 @@
         <CardBody>
             <Row>
                 <Column ColumnSize="ColumnSize.Is1">
-                    <Icon Style="@CategoryIconStyle" Name="@CategoryIcon" IconSize="IconSize.x4" TextColor="TextColor.Success" title="@Habit.Category.GetValueOrDefault().GetDescription()" />
+                    <Icon Style="@CategoryIconStyle" Name="@CategoryIcon" IconSize="IconSize.x4" TextColor="TextColor.Success" title="@CategoryToolTip" />
                 </Column>
                 <Column ColumnSize="ColumnSize.Is11">
                     <CardTitle Size="5">
@@ -28,26 +28,34 @@
 
     private string CategoryIcon;
     private string CategoryIconStyle = "cursor: default;";
+    private string CategoryToolTip = "";
+    private bool isOther = false;
 
     protected override void OnParametersSet()
     {
-        switch (Habit.Category)
+        if (Habit.Category.HasValue)
         {
-            case HabitCategory.Personal:
-                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Person;
-                break;
-            case HabitCategory.Career:
-                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Work;
-                break;
-            case HabitCategory.Health:
-                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.FitnessCenter;
-                break;
-            case HabitCategory.Relationships:
-                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Favorite;
-                break;
-            default:
-                CategoryIcon = Blazorise.Icons.Material.MaterialIcons.LiveHelp;
-                break;
+            switch (Habit.Category)
+            {
+                case HabitCategory.Personal:
+                    CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Person;
+                    break;
+                case HabitCategory.Career:
+                    CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Work;
+                    break;
+                case HabitCategory.Health:
+                    CategoryIcon = Blazorise.Icons.Material.MaterialIcons.FitnessCenter;
+                    break;
+                case HabitCategory.Relationships:
+                    CategoryIcon = Blazorise.Icons.Material.MaterialIcons.Favorite;
+                    break;
+                default:
+                    CategoryIcon = Blazorise.Icons.Material.MaterialIcons.LiveHelp;
+                    isOther = true;
+                    break;
+            }
+
+            CategoryToolTip = (!isOther ? Habit.Category?.GetDescription() : Habit.CategoryDescription) ?? string.Empty;
         }
         base.OnParametersSet();
     }
