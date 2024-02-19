@@ -1,9 +1,9 @@
 ﻿@page "/details/{Id:guid?}"
 @inject HabitService HabitService
 
-<PageTitle>@(Id == Guid.Empty ? "Review Habit Details" : "Habit Details")</PageTitle>
+<PageTitle>@(Id == Guid.Empty ? "Confirm Habit Details" : "Habit Details")</PageTitle>
 
-<h5>Review Habit Details</h5>
+<h5>Confirm Habit Details</h5>
 @if (Id == Guid.Empty)
 {
     <h6>If you need to change anything, go to the relevant section by clicking the &quot;Previous&quot; Button</h6>
