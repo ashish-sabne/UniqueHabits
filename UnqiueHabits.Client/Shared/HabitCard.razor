@@ -13,9 +13,16 @@
                     <CardText TextSize="TextSize.Medium" Margin="Margin.Is2.FromBottom">
                         @Habit.MeasurableResult
                     </CardText>
-                    <Button Color="Color.Success" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/details/{Habit.Id}")">
+                    <Button Color="Color.Success" Margin="Margin.Is2.FromTop.Is2.FromEnd" Type="ButtonType.Link" To="@($"/details/{Habit.Id}")">
                         Read more <Icon Name="IconName.ArrowRight" />
                     </Button>
+                    @if (Habit.ImplementationDetails?.IsImplementationDue ?? false)
+                    {
+                        <Button Color="Color.Success" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="@($"/{Habit.Id}/review")">
+                            Review <Icon Name="Blazorise.Icons.Material.MaterialIcons.RemoveRedEye" Margin="Margin.Is1.FromStart" />
+                        </Button>
+                    }
+
                 </Column>
             </Row>
         </CardBody>

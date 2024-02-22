@@ -1,0 +1,73 @@
+﻿@page "/{Id:guid}/review"
+@inject HabitService HabitService
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <Alert Color="Color.Danger" Visible>
+     <AlertMessage>Error!</AlertMessage>
+     <AlertDescription>@ErrorMessage</AlertDescription>
+ </Alert>
+}
+else if (Model != null)
+{
+    <Accordion>
+        <Collapse Visible="true">
+            <CollapseHeader>
+                <Heading Size="HeadingSize.Is5">
+                    <AccordionToggle>Habit Details</AccordionToggle>
+                </Heading>
+            </CollapseHeader>
+            <CollapseBody>
+                <Fields>
+                    <Field ColumnSize="ColumnSize.IsFull">
+                        <FieldLabel>System Name</FieldLabel>
+                        <TextEdit Text="@Model.SystemName" ReadOnly />
+                     </Field>
+                     <Field ColumnSize="ColumnSize.IsFull">
+                         <FieldLabel>Measurable Result</FieldLabel>
+                         <TextEdit Text="@Model.MeasurableResult" ReadOnly />
+                     </Field>
+                     <Field ColumnSize="ColumnSize.IsFull">
+                         <FieldLabel>Why</FieldLabel>
+                         <TextEdit Text="@Model.Why" ReadOnly />
+                     </Field>
+                     <Field ColumnSize="ColumnSize.IsFull">
+                         <FieldLabel>Category</FieldLabel>
+                         <TextEdit Text="@(Model.Category != HabitCategory.Other ? (Model.Category?.GetDescription() ?? "") : Model.CategoryDescription)" ReadOnly />
+                     </Field>
+                 </Fields>
+            </CollapseBody>
+        </Collapse>
+    </Accordion>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    bool showLoading = false;
+    string ErrorMessage = string.Empty;
+
+    public HabitReviewModel? Model { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        showLoading = true;
+        var result = await HabitService.ReviewHabit(Id);
+        showLoading = false;
+
+        if (!result.IsSuccess)
+        {
+            Model = null;
+            ErrorMessage = result.Message;
+        }
+        else
+        {
+            ErrorMessage = string.Empty;
+            Model = result.Value;
+        }
+
+        await base.OnParametersSetAsync();
+    }
+}
+

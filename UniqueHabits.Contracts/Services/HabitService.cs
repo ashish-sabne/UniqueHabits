@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
+using UniqueHabits.Shared.Constants;
 using UniqueHabits.Shared.Helpers;
 
 namespace UniqueHabits.Contracts.Services
@@ -18,7 +19,7 @@ namespace UniqueHabits.Contracts.Services
         {
             try
             {
-                var habits = await _httpClient.GetFromJsonAsync<List<HabitModel>>("api/Habits");
+                var habits = await _httpClient.GetFromJsonAsync<List<HabitModel>>("api/habits");
                 if (habits.IsAny())
                 {
                     return ApiResult<List<HabitModel>>.Success(habits);
@@ -42,7 +43,7 @@ namespace UniqueHabits.Contracts.Services
         {
             try
             {
-                var habit = await _httpClient.GetFromJsonAsync<HabitModel>($"api/Habits/{habitId}");
+                var habit = await _httpClient.GetFromJsonAsync<HabitModel>($"api/habits/{habitId}");
 
                 if (habit != null)
                 {
@@ -81,6 +82,32 @@ namespace UniqueHabits.Contracts.Services
             catch (Exception ex)
             {
                 return ApiResult.Failure(ex.Message);
+            }
+        }
+
+        public async Task<ApiResult<HabitReviewModel>> ReviewHabit(Guid habitId)
+        {
+            try
+            {
+                var habit = await _httpClient.GetFromJsonAsync<HabitReviewModel>($"api/habits/{habitId}/review");
+
+                if (habit != null)
+                {
+                    var days = (DateTime.Today - habit.LastImplementationDate).Days;
+                    if (days < SettingConstants.SprintLengthInDays)
+                    {
+                        return ApiResult<HabitReviewModel>.Failure("Habit not ready for review!");
+                    }
+                    return ApiResult<HabitReviewModel>.Success(habit);
+                }
+                else
+                {
+                    return ApiResult<HabitReviewModel>.Failure("Habit not found!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ApiResult<HabitReviewModel>.Failure(ex.Message);
             }
         }
     }

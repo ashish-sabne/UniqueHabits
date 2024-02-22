@@ -3,7 +3,7 @@
 
 <PageTitle>Home</PageTitle>
 
-<h2>Hello, world!</h2>
+<h3>Hello, world!</h3>
 
 <LoadingIndicator @bind-Visible="showLoading">
     @if (!showLoading && !Habits.IsAny())
@@ -27,6 +27,7 @@
     }
     else
     {
+        <h4>Here are the habits you recorded so far: </h4>
         @foreach (var habit in Habits)
         {
             <HabitCard Habit="habit" />

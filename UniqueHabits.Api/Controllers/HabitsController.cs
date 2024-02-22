@@ -76,5 +76,19 @@ namespace UniqueHabits.Api.Controllers
                 return BadRequest(message);
             }
         }
+
+        [HttpGet("{habitId}/review")]
+        public async Task<IActionResult> ReviewHabit(Guid habitId)
+        {
+            var habit = await _context.Habits.FindAsync(habitId);
+
+            if (habit == null)
+            {
+                return NotFound();
+            }
+            var model = _mapper.Map<HabitReviewModel>(habit);
+
+            return Ok(model);
+        }
     }
 }
