@@ -9,15 +9,14 @@ namespace UniqueHabits.Api.AutoMapper
         public HabitMappingProfile()
         {
             CreateMap<Habit, HabitModel>()
-                .ForMember(dest => dest.ImplementationDetails, opt => opt.MapFrom(src => src.Implementations.OrderByDescending(i => i.CreatedDate).FirstOrDefault()));
+                .ForMember(dest => dest.ImplementationDetails, opt => opt.MapFrom(src => src.LatestImplementation));
 
             CreateMap<Implementation, ImplementationDetails>()
                 .ForMember(dest => dest.Steps, opt => opt.MapFrom(src => src.Steps.OrderBy(s => s.Sequence)));
 
             CreateMap<Domain.Aggregates.ImplementationStep, Contracts.Models.ImplementationStep>();
 
-            CreateMap<Habit, HabitReviewModel>()
-                .ForMember(dest => dest.LastImplementationDate, opt => opt.MapFrom(src => src.Implementations.OrderByDescending(i => i.CreatedDate).FirstOrDefault().CreatedDate));
+            CreateMap<Habit, HabitReviewModel>();
         }
     }
 }

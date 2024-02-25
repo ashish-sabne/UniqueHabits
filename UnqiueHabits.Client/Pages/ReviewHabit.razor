@@ -3,18 +3,21 @@
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
-    <Alert Color="Color.Danger" Visible>
-     <AlertMessage>Error!</AlertMessage>
-     <AlertDescription>@ErrorMessage</AlertDescription>
- </Alert>
+    <Alert Color="Color.Danger" Visible="@false">
+        <AlertMessage>Error!</AlertMessage>
+        <AlertDescription>@ErrorMessage</AlertDescription>
+    </Alert>
+    <Button Color="Color.Primary" Margin="Margin.Is2.FromTop" Type="ButtonType.Link" To="/">
+        Go to home&nbsp; <Icon Name="IconName.Home" />
+    </Button>
 }
 else if (Model != null)
 {
     <Accordion>
-        <Collapse Visible="true">
+        <Collapse @ref="habitDetails">
             <CollapseHeader>
                 <Heading Size="HeadingSize.Is5">
-                    <AccordionToggle>Habit Details</AccordionToggle>
+                    <AccordionToggle>Habit Details (Click to @(habitDetails.Visible ? "hide" : "show"))</AccordionToggle>
                 </Heading>
             </CollapseHeader>
             <CollapseBody>
@@ -36,9 +39,17 @@ else if (Model != null)
                          <TextEdit Text="@(Model.Category != HabitCategory.Other ? (Model.Category?.GetDescription() ?? "") : Model.CategoryDescription)" ReadOnly />
                      </Field>
                  </Fields>
-            </CollapseBody>
-        </Collapse>
-    </Accordion>
+             </CollapseBody>
+         </Collapse>
+     </Accordion>
+     <Card Margin="Margin.Is5.FromTop.Is5.FromBottom">
+        <CardBody>
+            <CardTitle Size="5">
+                Let us review the progress so far
+            </CardTitle>
+            <ReviewHabitForm Habit="Model"></ReviewHabitForm>
+        </CardBody>
+     </Card>
 }
 
 @code {
@@ -49,6 +60,8 @@ else if (Model != null)
     string ErrorMessage = string.Empty;
 
     public HabitReviewModel? Model { get; set; }
+
+    private Collapse habitDetails;
 
     protected override async Task OnParametersSetAsync()
     {

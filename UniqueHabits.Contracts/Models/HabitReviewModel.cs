@@ -16,6 +16,15 @@ namespace UniqueHabits.Contracts.Models
         public string? Result { get; set; }
         public string? CustomizationDescription { get; set; }
 
+        public Guid PreviousImplementationId { get; set; }
+
+        public string When { get; set; }
+        public string Where { get; set; }
+        public string WithWhat { get; set; }
+        public string WithWhom { get; set; }
+
+        public List<ImplementationStep> Steps { get; set; } = new();
+
         public CustomizationCategory CustomizationCategory { get; set; }
 
     }

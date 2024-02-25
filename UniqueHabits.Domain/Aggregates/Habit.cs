@@ -2,7 +2,7 @@
 
 namespace UniqueHabits.Domain.Aggregates
 {
-    public class Habit
+    public partial class Habit
     {
         protected Habit() { }
         private Habit(Guid id, string systemName, string measurableResult, string why, DateTime startDate, HabitCategory category, string categoryDescription)

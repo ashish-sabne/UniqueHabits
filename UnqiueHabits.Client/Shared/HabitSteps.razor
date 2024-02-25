@@ -14,9 +14,9 @@
     </Card>
 }
 
-@if (HabitState.CurrentHabit.ImplementationDetails.Steps != null)
+@if (Steps != null)
 {
-    <DropContainer @ref="dropContainer" TItem="ImplementationStep" Items="@HabitState.CurrentHabit.ImplementationDetails.Steps" ItemsFilter="(i,s) => {return true;}" ItemDropped="@ItemDropped" Flex="Flex.Wrap.Grow.Is1">
+    <DropContainer @ref="dropContainer" TItem="ImplementationStep" Items="@Steps" ItemsFilter="(i,s) => {return true;}" ItemDropped="@ItemDropped" Flex="Flex.Wrap.Grow.Is1">
         <ChildContent>
             <DropZone @ref="dropZone" AllowReorder="IsEditable" DropAllowed="(i) => IsEditable" TItem="ImplementationStep" Name="Steps"
                       Border="Border.Rounded" Background="Background.Light" Padding="Padding.Is3" Margin="Margin.Is3" Flex="Flex.Grow.Is1">
@@ -36,7 +36,7 @@
         <ConfirmModal ConfirmTitle="Remove Step" ConfirmText="remove this step?" OnConfirm="() => RemoveStep(confirmModalId)" OnCancel="CancelRemoveStep"></ConfirmModal>
     }
 
-    if (!HabitState.CurrentHabit.ImplementationDetails.Steps.Any())
+    if (!Steps.Any())
     {
         <Paragraph TextColor="TextColor.Danger">
             No steps added
@@ -49,6 +49,9 @@
 @code {
     DropContainer<ImplementationStep> dropContainer;
     DropZone<ImplementationStep> dropZone;
+
+    [Parameter]
+    public List<ImplementationStep> Steps { get; set; } = HabitState.CurrentHabit.ImplementationDetails.Steps;
 
     [Parameter]
     public bool IsEditable { get; set; }
@@ -69,19 +72,20 @@
     {
         var newSteps = new List<ImplementationStep>();
 
-        newSteps.AddRange(HabitState.CurrentHabit.ImplementationDetails.Steps.Where(s => s.Id != targetItem.Id).OrderBy(s => s.Sequence));
+        newSteps.AddRange(Steps.Where(s => s.Id != targetItem.Id).OrderBy(s => s.Sequence));
         newSteps.Insert(targetSequence, targetItem);
 
-        HabitState.CurrentHabit.ImplementationDetails.Steps = newSteps;
+        Steps = newSteps;
         ReorderSteps();
     }
 
     void ReorderSteps()
     {
-        for (int index = 0; index < HabitState.CurrentHabit.ImplementationDetails.Steps.Count; index++)
+        for (int index = 0; index < Steps.Count; index++)
         {
-            HabitState.CurrentHabit.ImplementationDetails.Steps[index].Sequence = index + 1;
+            Steps[index].Sequence = index + 1;
         }
+        HabitState.CurrentHabit.ImplementationDetails.Steps = Steps;
         dropContainer.Refresh();
     }
 
@@ -90,8 +94,8 @@
         if (!string.IsNullOrEmpty(newStepText) && ValidateNewStep())
         {
 
-            int newSequence = HabitState.CurrentHabit.ImplementationDetails.Steps.Count;
-            HabitState.CurrentHabit.ImplementationDetails.Steps.Add(new ImplementationStep
+            int newSequence = Steps.Count;
+            Steps.Add(new ImplementationStep
                 {
                     Id = Guid.NewGuid(),
                     Step = newStepText,
@@ -115,17 +119,17 @@
     void RemoveStep(Guid stepId)
     {
         CancelRemoveStep();
-        var step = HabitState.CurrentHabit.ImplementationDetails.Steps.FirstOrDefault(s => s.Id == stepId);
+        var step = Steps.FirstOrDefault(s => s.Id == stepId);
         if (step != null)
         {
-            HabitState.CurrentHabit.ImplementationDetails.Steps.Remove(step);
+            Steps.Remove(step);
             ReorderSteps();
         }
     }
 
     bool ValidateNewStep()
     {
-        if (HabitState.CurrentHabit.ImplementationDetails.Steps.Any(s => s.Step.Equals(newStepText, StringComparison.CurrentCultureIgnoreCase)))
+        if (Steps.Any(s => s.Step.Equals(newStepText, StringComparison.CurrentCultureIgnoreCase)))
         {
             errorMessage = "You have already recorded this step";
             return false;

@@ -1,5 +1,5 @@
 ﻿<EditForm Model="@habit" OnValidSubmit="StartHabit">
-    <Validations @ref="@fluentValidations" Mode="ValidationMode.Auto" Model="@habit" HandlerType="typeof(FluentValidationHandler)">
+    <Validations @ref="@fluentValidations" Mode="ValidationMode.Manual" Model="@habit" HandlerType="typeof(FluentValidationHandler)">
         <Validation>
             <Field ColumnSize="ColumnSize.IsFull">
                 <FieldLabel Class="col-form-label" RequiredIndicator>System Name</FieldLabel>

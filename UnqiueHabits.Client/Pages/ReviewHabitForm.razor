@@ -1,0 +1,130 @@
+﻿@if (Habit != null)
+{
+    <EditForm Model="@Habit">
+        <Validations @ref="@fluentValidations" Mode="ValidationMode.Manual" Model="@Habit" HandlerType="typeof(FluentValidationHandler)">
+            <Validation>
+                <Field ColumnSize="ColumnSize.IsFull">
+                    <FieldLabel Class="col-form-label" RequiredIndicator>
+                        Result for last @UniqueHabits.Shared.Constants.SettingConstants.SprintLengthInDays days
+                    </FieldLabel>
+                    <FieldBody>
+                        <TextEdit @bind-Text="@Habit.Result" Placeholder="e.g. Saved an additional $100">
+                            <Feedback>
+                                <ValidationError />
+                            </Feedback>
+                        </TextEdit>
+                        <ValidationMessage For="@(() => Habit.Result)"></ValidationMessage>
+                    </FieldBody>
+                </Field>
+            </Validation>
+            <Validation>
+                <Field ColumnSize="ColumnSize.IsFull">
+                    <FieldLabel Class="col-form-label" RequiredIndicator>
+                         Describe what the one 14-day improvement will be
+                     </FieldLabel>
+                     <FieldBody>
+                        <TextEdit @bind-Text="@Habit.CustomizationDescription" Placeholder="e.g. Choose a different expense tracking app">
+                            <Feedback>
+                                <ValidationError></ValidationError>
+                            </Feedback>
+                        </TextEdit>
+                        <ValidationMessage For="@(() => Habit.CustomizationDescription)"></ValidationMessage>
+                    </FieldBody>
+                </Field>
+            </Validation>
+            <Validation>
+                <Field ColumnSize="ColumnSize.IsFull">
+                    <FieldLabel Class="col-form-label" RequiredIndicator>
+                         Pick ONE Customize Five improvement
+                    </FieldLabel>
+                    <FieldBody>
+                        <RadioGroup TValue="CustomizationCategory" Name="@nameof(Habit.CustomizationCategory)"
+                            @bind-CheckedValue="Habit.CustomizationCategory">
+                                @foreach (var category in Enum.GetValues<CustomizationCategory>())
+                                {
+                                    <Radio Value="category">@category.GetDescription()</Radio>
+                                }
+                        </RadioGroup>
+                    </FieldBody>
+                </Field>
+            </Validation>
+            @if (Habit.CustomizationCategory == CustomizationCategory.WithWhat)
+            {
+                <Validation>
+                    <Field ColumnSize="ColumnSize.IsFull">
+                        <FieldLabel Class="col-form-label" RequiredIndicator>What tools will you need?</FieldLabel>
+                         <FieldBody>
+                             <TextEdit @bind-Text="@Habit.WithWhat" Placeholder="e.g. Calculator, MS Excel, Online Banking App">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                            <ValidationMessage For="@(() => Habit.WithWhat)" />
+                        </FieldBody>
+                    </Field>
+                </Validation>
+            }
+            else if (Habit.CustomizationCategory == CustomizationCategory.When)
+            {
+                <Validation>
+                    <Field ColumnSize="ColumnSize.IsFull">
+                        <FieldLabel Class="col-form-label" RequiredIndicator>When will you practice the habit?</FieldLabel>
+                        <FieldBody>
+                            <TextEdit @bind-Text="@Habit.When" Placeholder="e.g. Every Saturday at 10 a.m.">
+                                <ChildContent>
+                                     <FieldHelp>Include frequency as well as duration</FieldHelp>
+                                </ChildContent>
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+            }
+            else if (Habit.CustomizationCategory == CustomizationCategory.Where)
+            {
+                <Validation>
+                    <Field ColumnSize="ColumnSize.IsFull">
+                        <FieldLabel Class="col-form-label" RequiredIndicator>Where will you practice the habit?</FieldLabel>
+                        <FieldBody>
+                            <TextEdit @bind-Text="@Habit.Where" Placeholder="e.g. On my couch">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                            <ValidationMessage For="@(() => Habit.Where)" />
+                        </FieldBody>
+                    </Field>
+                </Validation>
+            }
+            else if (Habit.CustomizationCategory == CustomizationCategory.WithWhom)
+            {
+                <Validation>
+                    <Field ColumnSize="ColumnSize.IsFull">
+                        <FieldLabel Class="col-form-label" RequiredIndicator>With whom will you practice the habit?</FieldLabel>
+                        <FieldBody>
+                            <TextEdit @bind-Text="@Habit.WithWhom" Placeholder="e.g. With my spouse">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                            <ValidationMessage For="@(() => Habit.WithWhom)" />
+                        </FieldBody>
+                    </Field>
+             </Validation>
+            }
+            else if (Habit.CustomizationCategory == CustomizationCategory.How)
+            {
+                <HabitSteps Steps="Habit.Steps" IsEditable="true"></HabitSteps>
+            }
+        </Validations>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public HabitReviewModel Habit { get; set; }
+
+    Validations fluentValidations;
+}

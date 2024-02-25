@@ -13,6 +13,8 @@ namespace UniqueHabits.Shared.Enums
         [Description("Where - Change the environment")]
         Where,
         [Description("With whom – Modify a partnership")]
-        WithWhom
+        WithWhom,
+        [Description("How – Alter one system step")]
+        How,
     }
 }

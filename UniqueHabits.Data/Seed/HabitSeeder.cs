@@ -35,7 +35,7 @@ namespace UniqueHabits.Data.Seed
                     Id = Guid.Parse("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
                     HabitId = Guid.Parse("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
                     WithWhat = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
-                    When = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
+                    When = "First thing in the morning for 25 minutes.",
                     Where = "On my couch",
                     WithWhom = "Share on LinkedIn one thing I learned today",
                     CreatedDate = new DateTime(2024, 1, 12, 0, 0, 0)
