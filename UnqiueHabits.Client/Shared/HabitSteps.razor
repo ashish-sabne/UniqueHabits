@@ -25,7 +25,7 @@
         <ItemTemplate>
             <Card Shadow="Shadow.Default" Margin="Margin.Is3.OnY">
                 <CardBody>
-                   <HabitStep Step="@context" OnRemove="ConfirmRemoveStep" />
+                   <HabitStep Step="@context" ShowButtons="IsEditable" OnRemove="ConfirmRemoveStep" />
                 </CardBody>
             </Card>
         </ItemTemplate>
@@ -51,10 +51,13 @@
     DropZone<ImplementationStep> dropZone;
 
     [Parameter]
-    public List<ImplementationStep> Steps { get; set; } = HabitState.CurrentHabit.ImplementationDetails.Steps;
+    public List<ImplementationStep> Steps { get; set; }
 
     [Parameter]
     public bool IsEditable { get; set; }
+
+    [Parameter]
+    public EventCallback<List<ImplementationStep>> OnUpdate { get; set; }
 
     Guid confirmModalId = Guid.Empty;
 
@@ -85,7 +88,7 @@
         {
             Steps[index].Sequence = index + 1;
         }
-        HabitState.CurrentHabit.ImplementationDetails.Steps = Steps;
+        OnUpdate.InvokeAsync(Steps);
         dropContainer.Refresh();
     }
 

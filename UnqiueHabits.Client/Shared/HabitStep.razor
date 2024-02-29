@@ -6,24 +6,30 @@
             <Column><Badge Color="Color.Success" Pill>@Step.Sequence</Badge></Column>
             <Column ColumnSize="ColumnSize.Is11">
                 @Step.Step
-                <Button Clicked="EditStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Edit Step">
-                    <Icon Name="IconName.Pen" TextColor="TextColor.Primary" />
-                </Button>
-                <Button Clicked="RemoveStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Remove Step">
-                    <Icon Name="IconName.Delete" TextColor="TextColor.Danger" />
-                </Button>
+                @if (ShowButtons)
+                {
+                    <Button Clicked="EditStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Edit Step">
+                        <Icon Name="IconName.Pen" TextColor="TextColor.Primary" />
+                    </Button>
+                    <Button Clicked="RemoveStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Remove Step">
+                        <Icon Name="IconName.Delete" TextColor="TextColor.Danger" />
+                    </Button>
+                }
             </Column>
         </Grid>
     }
     else
     {
         <TextEdit @bind-Text="@StepText" />
-        <Button Clicked="SaveStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Save Changes">
-            <Icon Name="IconName.Save" TextColor="TextColor.Primary" />
-        </Button>
-        <Button Clicked="CancelStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Cancel Changes">
-            <Icon Name="IconName.Backspace" TextColor="TextColor.Secondary" />
-        </Button>
+        @if (ShowButtons)
+        {
+            <Button Clicked="SaveStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Save Changes">
+                <Icon Name="IconName.Save" TextColor="TextColor.Primary" />
+            </Button>
+            <Button Clicked="CancelStep" Float="Float.End" Outline="false" Shadow="Shadow.None" Class="shadow-none" title="Cancel Changes">
+                <Icon Name="IconName.Backspace" TextColor="TextColor.Secondary" />
+            </Button>
+        }
     }
 }
 
@@ -34,6 +40,9 @@
 
     [Parameter]
     public EventCallback<Guid> OnRemove { get; set; }
+
+    [Parameter]
+    public bool ShowButtons { get; set; }
 
     public bool IsEditable { get; set; }
 

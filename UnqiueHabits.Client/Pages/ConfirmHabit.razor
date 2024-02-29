@@ -52,10 +52,7 @@
                         @foreach (var step in habit.ImplementationDetails.Steps.OrderBy(s => s.Sequence))
                         {
                             <ListGroupItem>
-                                <Grid>
-                                    <Column><Badge Color="Color.Success" Pill>@step.Sequence</Badge></Column>
-                                    <Column ColumnSize="ColumnSize.Is11">@step.Step</Column>
-                                </Grid>
+                                <HabitStep Step="@step" ShowButtons="false" />
                             </ListGroupItem>
                         }
                     </ListGroup>
