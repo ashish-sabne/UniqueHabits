@@ -80,6 +80,9 @@ namespace UniqueHabits.Data.Migrations
                             b1.Property<DateTime>("CreatedDate")
                                 .HasColumnType("datetime2");
 
+                            b1.Property<string>("CustomizationCategory")
+                                .HasColumnType("nvarchar(max)");
+
                             b1.Property<string>("CustomizationDescription")
                                 .HasColumnType("nvarchar(max)");
 
@@ -221,7 +224,7 @@ namespace UniqueHabits.Data.Migrations
                                     HabitId = new Guid("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"),
                                     Id = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
                                     CreatedDate = new DateTime(2024, 1, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                                    When = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
+                                    When = "First thing in the morning for 25 minutes.",
                                     Where = "On my couch",
                                     WithWhat = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
                                     WithWhom = "Share on LinkedIn one thing I learned today"

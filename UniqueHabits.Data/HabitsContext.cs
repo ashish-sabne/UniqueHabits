@@ -18,10 +18,15 @@ namespace UniqueHabits.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).Property(h => h.CustomizationCategory)
+                .HasConversion(new EnumToStringConverter<CustomizationCategory>());
             modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).OwnsMany(i => i.Steps);
 
             modelBuilder.Entity<Habit>().Property(h => h.Category)
                 .HasConversion(new EnumToStringConverter<HabitCategory>());
+
+            /*modelBuilder.Entity<Implementation>().Property(h => h.CustomizationCategory)
+                .HasConversion(new EnumToStringConverter<CustomizationCategory>());*/
 
             modelBuilder.Entity<Habit>().Seed();
             

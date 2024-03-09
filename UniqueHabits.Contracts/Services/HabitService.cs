@@ -74,7 +74,7 @@ namespace UniqueHabits.Contracts.Services
                     }
                     else
                     {
-                        return ApiResult.Failure($"Error adding habit: {result.ReasonPhrase}");
+                        return ApiResult.Failure(result.ReasonPhrase);
                     }
                 }
                 return ApiResult.Failure();
@@ -108,6 +108,32 @@ namespace UniqueHabits.Contracts.Services
             catch (Exception ex)
             {
                 return ApiResult<HabitReviewModel>.Failure(ex.Message);
+            }
+        }
+
+        public async Task<ApiResult> AddHabitReview(HabitReviewModel review)
+        {
+            try
+            {
+                var result = await _httpClient.PostAsJsonAsync($"api/habits/{review.Id}/review", review);
+
+                if (result != null)
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        return ApiResult.Success();
+                    }
+                    else
+                    {
+                        var a = await result.Content.ReadAsStringAsync();
+                        return ApiResult.Failure(result.ReasonPhrase);
+                    }
+                }
+                return ApiResult.Failure();
+            }
+            catch (Exception ex)
+            {
+                return ApiResult.Failure(ex.Message);
             }
         }
     }

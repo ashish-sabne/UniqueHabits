@@ -12,6 +12,12 @@ namespace UniqueHabits.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
+                name: "CustomizationCategory",
+                table: "Implementation",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
                 name: "CustomizationDescription",
                 table: "Implementation",
                 type: "nvarchar(max)",
@@ -33,13 +39,17 @@ namespace UniqueHabits.Data.Migrations
                 table: "Implementation",
                 keyColumns: new[] { "HabitId", "Id" },
                 keyValues: new object[] { new Guid("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"), new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4") },
-                columns: new[] { "CustomizationDescription", "PreviousImplementationId", "Result" },
-                values: new object[] { null, null, null });
+                columns: new[] { "CustomizationCategory", "CustomizationDescription", "PreviousImplementationId", "Result", "When" },
+                values: new object[] { null, null, null, null, "First thing in the morning for 25 minutes." });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "CustomizationCategory",
+                table: "Implementation");
+
             migrationBuilder.DropColumn(
                 name: "CustomizationDescription",
                 table: "Implementation");
@@ -51,6 +61,13 @@ namespace UniqueHabits.Data.Migrations
             migrationBuilder.DropColumn(
                 name: "Result",
                 table: "Implementation");
+
+            migrationBuilder.UpdateData(
+                table: "Implementation",
+                keyColumns: new[] { "HabitId", "Id" },
+                keyValues: new object[] { new Guid("171d31ef-0a27-4fe8-bfd4-bb12083d5ba0"), new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4") },
+                column: "When",
+                value: "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email");
         }
     }
 }

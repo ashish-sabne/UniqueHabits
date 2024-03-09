@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniqueHabits.Shared.Enums;
 
 namespace UniqueHabits.Domain.Aggregates
 {
@@ -19,5 +20,35 @@ namespace UniqueHabits.Domain.Aggregates
         [NotMapped]
         public virtual List<ImplementationStep> Steps => LatestImplementation?.Steps?.OrderBy(s => s.Sequence)?.ToList() ?? new();
         public DateTime LastImplementationDate => LatestImplementation?.CreatedDate ?? DateTime.Today;
+
+        public void AddReview(string result, string customizationDescription, CustomizationCategory customizationCategory, string when, string where, 
+            string withWhat, string withWhom, List<ImplementationStep> steps)
+        {
+            var stepsCopy = Steps.Select(s => ImplementationStep.Create(Guid.NewGuid(), s.Step, s.Sequence)).ToList();
+            var newImplementation = Implementation.Create(Guid.NewGuid(), Id, PreviousImplementationId, result, customizationDescription, 
+                customizationCategory, WithWhat, When, Where, WithWhom, stepsCopy);
+
+            switch (customizationCategory)
+            {
+                case CustomizationCategory.WithWhat:
+                    newImplementation.UpdateWithWhat(withWhat);
+                    break;
+                case CustomizationCategory.When:
+                    newImplementation.UpdateWhen(when);
+                    break;
+                case CustomizationCategory.Where:
+                    newImplementation.UpdateWhere(where);
+                    break;
+                case CustomizationCategory.WithWhom:
+                    newImplementation.UpdateWithWhom(withWhom);
+                    break;
+                case CustomizationCategory.How:
+                    newImplementation.UpdateSteps(steps);
+                    break;
+                default:
+                    break;
+            }
+            AddImplementation(newImplementation);
+        }
     }
 }

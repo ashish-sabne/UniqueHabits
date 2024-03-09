@@ -90,5 +90,31 @@ namespace UniqueHabits.Api.Controllers
 
             return Ok(model);
         }
+        
+        [HttpPost("{habitId}/review")]
+        public async Task<IActionResult> AddHabitReview([FromBody] HabitReviewModel model)
+        {
+            try
+            {
+                var habit = await _context.Habits.FindAsync(model.Id);
+
+                if (habit == null)
+                    return NotFound("No habit to review");
+
+                var steps = model.Steps.Select(s => ImplementationStep.Create(Guid.NewGuid(), s.Step, s.Sequence)).ToList();
+
+                habit.AddReview(model.Result, model.CustomizationDescription, model.CustomizationCategory, model.When, model.Where, model.WithWhat,
+                    model.WithWhom, steps);
+
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                return BadRequest(message);
+            }
+        }
     }
 }

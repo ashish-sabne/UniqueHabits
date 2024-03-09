@@ -13,8 +13,8 @@ namespace UniqueHabits.Contracts.Models
         public string? CategoryDescription { get; set; }
 
         public DateTime LastImplementationDate { get; set; }
-        public string? Result { get; set; }
-        public string? CustomizationDescription { get; set; }
+        public string Result { get; set; }
+        public string CustomizationDescription { get; set; }
 
         public Guid PreviousImplementationId { get; set; }
 

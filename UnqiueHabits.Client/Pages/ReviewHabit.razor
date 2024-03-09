@@ -1,5 +1,6 @@
 ﻿@page "/{Id:guid}/review"
 @inject HabitService HabitService
+@inject NavigationManager Navigation
 
 @if (!string.IsNullOrEmpty(ErrorMessage))
 {
@@ -47,7 +48,7 @@ else if (Model != null)
             <CardTitle Size="5">
                 Let us review the progress so far
             </CardTitle>
-            <ReviewHabitForm Habit="Model"></ReviewHabitForm>
+            <ReviewHabitForm Habit="Model" OnSubmit="CreateHabitReview" OnCancel="CancelHabitReview"></ReviewHabitForm>
         </CardBody>
      </Card>
 }
@@ -55,6 +56,8 @@ else if (Model != null)
 @code {
     [Parameter]
     public Guid Id { get; set; }
+
+    [Inject] INotificationService NotificationService { get; set; }
 
     bool showLoading = false;
     string ErrorMessage = string.Empty;
@@ -81,6 +84,26 @@ else if (Model != null)
         }
 
         await base.OnParametersSetAsync();
+    }
+
+    private async Task CreateHabitReview(HabitReviewModel model)
+    {
+        var result = await HabitService.AddHabitReview(model);
+        if (result.IsSuccess)
+        {
+            await NotificationService.Success("Review added successfully!", "Success!");
+            CancelHabitReview();
+        }
+        else
+        {
+            await NotificationService.Error($"Error adding habit review - {result.Message}", "Error!");
+        }
+        
+    }
+
+    private void CancelHabitReview()
+    {
+        Navigation.NavigateTo("/");
     }
 }
 

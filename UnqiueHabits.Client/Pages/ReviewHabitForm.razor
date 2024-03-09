@@ -1,6 +1,6 @@
 ﻿@if (Habit != null)
 {
-    <EditForm Model="@Habit">
+    <EditForm Model="@Habit" OnValidSubmit="Submit">
         <Validations @ref="@fluentValidations" Mode="ValidationMode.Manual" Model="@Habit" HandlerType="typeof(FluentValidationHandler)">
             <Validation>
                 <Field ColumnSize="ColumnSize.IsFull">
@@ -32,29 +32,27 @@
                     </FieldBody>
                 </Field>
             </Validation>
-            <Validation>
-                <Field ColumnSize="ColumnSize.IsFull">
-                    <FieldLabel Class="col-form-label" RequiredIndicator>
-                         Pick ONE Customize Five improvement
-                    </FieldLabel>
-                    <FieldBody>
-                        <RadioGroup TValue="CustomizationCategory" Name="@nameof(Habit.CustomizationCategory)"
-                            @bind-CheckedValue="Habit.CustomizationCategory">
-                                @foreach (var category in Enum.GetValues<CustomizationCategory>())
-                                {
-                                    <Radio Value="category">@category.GetDescription()</Radio>
-                                }
-                        </RadioGroup>
-                    </FieldBody>
-                </Field>
-            </Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>
+                    Pick ONE Customize Five improvement
+                </FieldLabel>
+                <FieldBody>
+                    <RadioGroup TValue="CustomizationCategory" Name="@nameof(Habit.CustomizationCategory)"
+                    @bind-CheckedValue="Habit.CustomizationCategory">
+                        @foreach (var category in Enum.GetValues<CustomizationCategory>())
+                        {
+                            <Radio Value="category">@category.GetDescription()</Radio>
+                        }
+                    </RadioGroup>
+                </FieldBody>
+            </Field>
             @if (Habit.CustomizationCategory == CustomizationCategory.WithWhat)
             {
                 <Validation>
                     <Field ColumnSize="ColumnSize.IsFull">
                         <FieldLabel Class="col-form-label" RequiredIndicator>What tools will you need?</FieldLabel>
-                         <FieldBody>
-                             <TextEdit @bind-Text="@Habit.WithWhat" Placeholder="e.g. Calculator, MS Excel, Online Banking App">
+                        <FieldBody>
+                            <TextEdit @bind-Text="@Habit.WithWhat" Placeholder="e.g. Calculator, MS Excel, Online Banking App">
                                 <Feedback>
                                     <ValidationError />
                                 </Feedback>
@@ -112,12 +110,16 @@
                             <ValidationMessage For="@(() => Habit.WithWhom)" />
                         </FieldBody>
                     </Field>
-             </Validation>
+                </Validation>
             }
             else if (Habit.CustomizationCategory == CustomizationCategory.How)
             {
                 <HabitSteps Steps="Habit.Steps" IsEditable="true"></HabitSteps>
             }
+            <Field ColumnSize="ColumnSize.IsFull">
+                <Button Color="Color.Primary" Type="ButtonType.Submit" Float="Float.End" Margin="Margin.Is2">Next</Button>
+                <Button Color="Color.Light" Type="ButtonType.Reset" Float="Float.Start" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>
+            </Field>
         </Validations>
     </EditForm>
 }
@@ -126,5 +128,21 @@
     [Parameter]
     public HabitReviewModel Habit { get; set; }
 
+    [Parameter]
+    public EventCallback<HabitReviewModel> OnSubmit { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
     Validations fluentValidations;
+
+    private async Task Submit()
+    {
+        if (await fluentValidations.ValidateAll())
+            await OnSubmit.InvokeAsync(Habit);
+    }
+
+    private async Task Cancel()
+    {
+        await OnCancel.InvokeAsync();
+    }
 }
