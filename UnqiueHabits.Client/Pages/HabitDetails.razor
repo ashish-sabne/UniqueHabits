@@ -10,7 +10,7 @@
              </FieldBody>
          </Field>
     }
-    <Validations @ref="@fluentValidations" Mode="ValidationMode.Auto" Model="@implementation" HandlerType="typeof(FluentValidationHandler)">
+    <Validations @ref="@fluentValidations" Mode="ValidationMode.Manual" Model="@implementation" HandlerType="typeof(FluentValidationHandler)">
         <Validation>
             <Field ColumnSize="ColumnSize.IsFull">
                 <FieldLabel Class="col-form-label" RequiredIndicator>What tools will you need?</FieldLabel>

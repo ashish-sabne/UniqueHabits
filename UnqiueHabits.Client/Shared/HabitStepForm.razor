@@ -1,0 +1,28 @@
+﻿<Card Shadow="Shadow.Default" Margin="Margin.Is3.OnY">
+    <CardBody>
+        <TextEdit @ref="newStepTextEdit" @bind-Text="@NewStepText" Placeholder="e.g. Prepare coffee at home than buying out." />
+    </CardBody>
+    <CardFooter>
+        <Button Disabled="@string.IsNullOrEmpty(NewStepText)" Color="Color.Warning" Float="Float.Start" Margin="Margin.Is2" Clicked="Submit">Add Step</Button>
+    </CardFooter>
+</Card>
+
+@code {
+
+    public string NewStepText { get; set; } = "";
+
+    [Parameter]
+    public EventCallback<string> OnSubmit { get; set; }
+
+    private TextEdit newStepTextEdit;
+
+    async Task Submit()
+    {
+        if (!string.IsNullOrEmpty(NewStepText))
+        {
+            await OnSubmit.InvokeAsync(NewStepText);
+            NewStepText = "";
+            await newStepTextEdit.Focus();
+        }
+    }
+}

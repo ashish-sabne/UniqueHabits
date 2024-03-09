@@ -1,17 +1,10 @@
 ﻿@if (IsEditable)
 {
-    <Card Shadow="Shadow.Default" Margin="Margin.Is3.OnY">
-        <CardBody>
-            <TextEdit @bind-Text="@newStepText" Placeholder="e.g. Prepare coffee at home than buying out." />
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <Paragraph TextColor="TextColor.Warning">@errorMessage</Paragraph>
-            }
-        </CardBody>
-        <CardFooter>
-            <Button Disabled="@string.IsNullOrEmpty(newStepText)" Color="Color.Warning" Float="Float.Start" Margin="Margin.Is2" Clicked="AddStep">Add Step</Button>
-        </CardFooter>
-    </Card>
+    <HabitStepForm OnSubmit="AddStep"></HabitStepForm>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <Paragraph TextColor="TextColor.Warning">@errorMessage</Paragraph>
+    }
 }
 
 @if (Steps != null)
@@ -69,7 +62,7 @@
         return Task.CompletedTask;
     }
 
-    string newStepText = "", errorMessage = "";
+    string errorMessage = "";
 
     void RearrangeSteps(int targetSequence, ImplementationStep targetItem)
     {
@@ -92,9 +85,9 @@
         dropContainer.Refresh();
     }
 
-    void AddStep()
+    void AddStep(string newStepText)
     {
-        if (!string.IsNullOrEmpty(newStepText) && ValidateNewStep())
+        if (!string.IsNullOrEmpty(newStepText) && ValidateNewStep(newStepText))
         {
 
             int newSequence = Steps.Count;
@@ -105,7 +98,6 @@
                     Sequence = newSequence
                 });
             ReorderSteps();
-            newStepText = "";
         }
     }
 
@@ -130,7 +122,7 @@
         }
     }
 
-    bool ValidateNewStep()
+    bool ValidateNewStep(string newStepText)
     {
         if (Steps.Any(s => s.Step.Equals(newStepText, StringComparison.CurrentCultureIgnoreCase)))
         {
