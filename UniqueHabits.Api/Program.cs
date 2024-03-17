@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UniqueHabits.Data;
+using UniqueHabits.Domain.Aggregates;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,10 @@ builder.Services.AddDbContext<HabitsContext>(options =>
 					maxRetryDelay: TimeSpan.FromSeconds(30),
 					errorNumbersToAdd: null));
 });
+
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+  .AddEntityFrameworkStores<HabitsContext>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,6 +45,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("MyCorsPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

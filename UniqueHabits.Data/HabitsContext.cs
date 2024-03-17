@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniqueHabits.Data.Seed;
 using UniqueHabits.Domain.Aggregates;
@@ -6,7 +8,7 @@ using UniqueHabits.Shared.Enums;
 
 namespace UniqueHabits.Data
 {
-    public class HabitsContext : DbContext
+    public class HabitsContext : IdentityDbContext<AppUser>
     {
         public HabitsContext(DbContextOptions<HabitsContext> options) : base(options)
         {
