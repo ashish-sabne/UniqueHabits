@@ -17,7 +17,6 @@ namespace UniqueHabits.Api.Controllers
         }
 
         [Route("api/register")]
-        [HttpPost]
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -27,14 +26,21 @@ namespace UniqueHabits.Api.Controllers
 
             var user = AppUser.Create(model.FirstName, model.LastName, model.Email);
 
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
+            try
             {
-                var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(errors);
-            }
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (!result.Succeeded)
+                {
+                    var errors = result.Errors.Select(e => e.Description);
+                    return BadRequest(errors);
+                }
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -20,7 +20,14 @@ builder.Services.AddScoped<HabitService>();
 
 builder.Services.AddHttpClient<HabitService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7135/");
+    client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Api"));
+});
+
+builder.Services.AddScoped<AuthService>();
+
+builder.Services.AddHttpClient<AuthService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Api"));
 });
 
 builder.Services

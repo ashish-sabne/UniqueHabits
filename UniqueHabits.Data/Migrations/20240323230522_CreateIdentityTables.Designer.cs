@@ -12,7 +12,7 @@ using UniqueHabits.Data;
 namespace UniqueHabits.Data.Migrations
 {
     [DbContext(typeof(HabitsContext))]
-    [Migration("20240317023225_CreateIdentityTables")]
+    [Migration("20240323230522_CreateIdentityTables")]
     partial class CreateIdentityTables
     {
         /// <inheritdoc />
@@ -182,7 +182,6 @@ namespace UniqueHabits.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")

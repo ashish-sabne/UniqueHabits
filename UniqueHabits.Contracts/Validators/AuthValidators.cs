@@ -16,30 +16,31 @@ namespace UniqueHabits.Contracts.Validators
                 .Must(HasLowercase).WithMessage("Password must contain at least one lowercase letter")
                 .Must(HasDigit).WithMessage("Password must contain at least one number")
                 .Must(HasSpecialCharacter).WithMessage("Password must contain at least one special character");
+            RuleFor(m => m.ConfirmPassword).NotEmpty().Equal(m => m.Password).WithMessage("Password and confirm password do not match");
         }
 
         private bool HasUppercase(string password)
         {
             var regex = new Regex("[A-Z]+");
-            return regex.IsMatch(password);
+            return !string.IsNullOrEmpty(password) && regex.IsMatch(password);
         }
         
         private bool HasLowercase(string password)
         {
             var regex = new Regex("[a-z]+");
-            return regex.IsMatch(password);
+            return !string.IsNullOrEmpty(password) && regex.IsMatch(password);
         }
         
         private bool HasDigit(string password)
         {
             var regex = new Regex("(\\d)+");
-            return regex.IsMatch(password);
+            return !string.IsNullOrEmpty(password) && regex.IsMatch(password);
         }
         
         private bool HasSpecialCharacter(string password)
         {
             var regex = new Regex("(\\W)+");
-            return regex.IsMatch(password);
+            return !string.IsNullOrEmpty(password) && regex.IsMatch(password);
         }
     }
 }

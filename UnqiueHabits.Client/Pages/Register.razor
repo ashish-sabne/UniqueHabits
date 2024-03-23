@@ -1,0 +1,105 @@
+﻿@page "/register"
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<EditForm Model="@model" OnValidSubmit="RegisterUser">
+    <Validations @ref="@fluentValidations" Mode="ValidationMode.Manual" Model="@model" HandlerType="typeof(FluentValidationHandler)">
+        <Blazorise.ValidationSummary />
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>First Name</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@model.FirstName" Placeholder="First Name">
+                        <Feedback>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label">Last Name</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@model.LastName" Placeholder="Last Name">
+                        <Feedback>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>Email</FieldLabel>
+                <FieldBody>
+                    <TextEdit @bind-Text="@model.Email" Placeholder="Email">
+                        <Feedback>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>Password</FieldLabel>
+                <FieldBody>
+                    <TextEdit Role="TextRole.Password" @bind-Text="@model.Password" Placeholder="Password">
+                        <Feedback>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+        
+        <Validation>
+            <Field ColumnSize="ColumnSize.IsFull">
+                <FieldLabel Class="col-form-label" RequiredIndicator>Confirm Password</FieldLabel>
+                <FieldBody>
+                    <TextEdit Role="TextRole.Password" @bind-Text="@model.ConfirmPassword" Placeholder="Confirm Password">
+                        <Feedback>
+                        </Feedback>
+                    </TextEdit>
+                </FieldBody>
+            </Field>
+        </Validation>
+
+        <Field ColumnSize="ColumnSize.IsFull">
+            <Button Color="Color.Primary" Type="ButtonType.Submit" Float="Float.End" Margin="Margin.Is2">Submit</Button>
+            <Button Color="Color.Light" Type="ButtonType.Reset" Float="Float.Start" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>
+        </Field>
+    </Validations>
+</EditForm>
+
+@code {
+
+    [Inject] INotificationService NotificationService { get; set; }
+
+    RegisterModel model = new RegisterModel();
+
+    Validations fluentValidations;
+
+    private async Task RegisterUser()
+    {
+        if (await fluentValidations.ValidateAll())
+        {
+            var result = await AuthService.Register(model);
+
+            if (result.IsSuccess)
+            {
+                await NotificationService.Success("User added successfully!", "Success!");
+                Cancel();
+            }
+            else
+            {
+                await NotificationService.Error($"Error adding user - {result.Message}", "Error!");
+            }
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
