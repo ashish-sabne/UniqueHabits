@@ -43,4 +43,13 @@ namespace UniqueHabits.Contracts.Validators
             return !string.IsNullOrEmpty(password) && regex.IsMatch(password);
         }
     }
+
+    class LoginValidator : AbstractValidator<LoginModel>
+    {
+        public LoginValidator()
+        {
+            RuleFor(m => m.Email).NotEmpty().EmailAddress();
+            RuleFor(m => m.Password).NotEmpty();
+        }
+    }
 }

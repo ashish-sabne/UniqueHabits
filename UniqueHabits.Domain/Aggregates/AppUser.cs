@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Text;
 
 namespace UniqueHabits.Domain.Aggregates
 {
@@ -20,6 +21,21 @@ namespace UniqueHabits.Domain.Aggregates
         public static AppUser Create(string firstName, string lastName, string email)
         {
             return new AppUser(firstName, lastName, email);
+        }
+
+        public string Name
+        {
+            get
+            {
+                var sbName = new StringBuilder(FirstName);
+
+                if (!string.IsNullOrEmpty(LastName))
+                {
+                    sbName.Append($" {LastName}");
+                }
+
+                return sbName.ToString();
+            }
         }
     }
 }
