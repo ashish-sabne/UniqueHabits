@@ -23,6 +23,7 @@ builder.Services.AddHttpClient<HabitService>(client =>
     client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Api"));
 });
 
+builder.Services.AddScoped<AuthState>();
 builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddHttpClient<AuthService>(client =>

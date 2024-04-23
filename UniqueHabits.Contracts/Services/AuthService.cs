@@ -43,5 +43,35 @@ namespace UniqueHabits.Contracts.Services
                 return ApiResult.Failure(ex.Message);
             }
         }
+
+        public async Task<ApiResult<AuthUserModel>> Login(LoginModel model)
+        {
+            try
+            {
+                var result = await _httpClient.PostAsJsonAsync("api/login", model);
+
+                if (result != null)
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var authData = await result.Content.ReadFromJsonAsync<AuthUserModel>();
+                        if (authData != null)
+                        {
+                            return ApiResult<AuthUserModel>.Success(authData);
+                        }
+                    }
+                    else
+                    {
+                        var contents = await result.Content.ReadAsStringAsync();
+                        return ApiResult<AuthUserModel>.Failure("Invalid email and/or password");
+                    }
+                }
+                return ApiResult<AuthUserModel>.Failure("Unknown error occurred! Please try again!");
+            }
+            catch (Exception ex)
+            {
+                return ApiResult<AuthUserModel>.Failure(ex.Message);
+            }
+        }
     }
 }

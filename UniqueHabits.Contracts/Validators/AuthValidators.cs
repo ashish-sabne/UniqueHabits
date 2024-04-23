@@ -44,7 +44,7 @@ namespace UniqueHabits.Contracts.Validators
         }
     }
 
-    class LoginValidator : AbstractValidator<LoginModel>
+    public class LoginValidator : AbstractValidator<LoginModel>
     {
         public LoginValidator()
         {
