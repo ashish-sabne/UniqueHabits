@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniqueHabits.Contracts.Models;
@@ -8,6 +9,7 @@ using ImplementationStep = UniqueHabits.Domain.Aggregates.ImplementationStep;
 
 namespace UniqueHabits.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class HabitsController : ControllerBase
