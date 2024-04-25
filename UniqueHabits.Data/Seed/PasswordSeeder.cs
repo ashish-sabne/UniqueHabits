@@ -12,9 +12,12 @@ namespace UniqueHabits.Data.Seed
             _userManager = userManager;
         }
 
-        public async Task SeedPasswordForSeededUsers()
+        public async Task SeedPasswordForSeededUsers(params Tuple<string, string>[] credentials)
         {
-            await SeedPassword("admin.user@test.com", "@dm!nP@$$w0rD");
+            foreach (var cred in credentials)
+            {
+                await SeedPassword(cred.Item1, cred.Item2); 
+            }
         }
 
         private async Task SeedPassword(string email, string password)
