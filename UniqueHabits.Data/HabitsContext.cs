@@ -35,6 +35,8 @@ namespace UniqueHabits.Data
             modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).Seed();
 
             modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).OwnsMany(i => i.Steps).Seed();
+
+            modelBuilder.Entity<AppUser>().Seed();
         }
     }
 }

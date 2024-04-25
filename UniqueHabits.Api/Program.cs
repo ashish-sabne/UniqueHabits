@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
 using System.Text;
+using UniqueHabits.Api.Helpers;
 using UniqueHabits.Data;
+using UniqueHabits.Data.Seed;
 using UniqueHabits.Domain.Aggregates;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,6 +63,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.DescribeAllParametersInCamelCase();
 });
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddCors(options =>
@@ -92,6 +94,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddScoped<PasswordSeeder>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -102,6 +106,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.SetPasswordsForSeededUsers();
 
 app.UseCors("MyCorsPolicy");
 
