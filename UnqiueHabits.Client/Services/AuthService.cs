@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
 
-namespace UniqueHabits.Contracts.Services
+namespace UniqueHabits.Client.Services
 {
     public class AuthService
     {

@@ -5,7 +5,7 @@ using Blazorise.Material;
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using UniqueHabits.Contracts.Services;
+using UniqueHabits.Client.Services;
 using UniqueHabits.Contracts.Validators;
 using UnqiueHabits.Client;
 

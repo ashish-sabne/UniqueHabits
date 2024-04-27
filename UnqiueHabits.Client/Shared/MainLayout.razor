@@ -10,16 +10,12 @@
         <div class="top-row px-4">
             @if (AuthState.CurrentUser == null)
             {
-                <a href="/register">Register</a>
-                <a href="/login" class="pl-2">Login</a>
+                <Blazorise.Link To="/register">Register</Blazorise.Link>
+                <Blazorise.Link To="/login" class="pl-2">Login</Blazorise.Link>
             }
             else
             {
-                <EditForm Model="@temp" OnValidSubmit="Logout">
-                    <Field ColumnSize="ColumnSize.IsFull">
-                        <Button Color="Color.Link" Type="ButtonType.Submit" Class="btn-link">Logout</Button>
-                    </Field>
-                </EditForm>
+               <Blazorise.Link To="javascript::void(0)" Clicked="Logout">Log Out</Blazorise.Link>
             }
         </div>
 
@@ -31,7 +27,7 @@
 </div>
 
 @code {
-    bool temp = true;
+    
     void Logout()
     {
         AuthState.Clear();

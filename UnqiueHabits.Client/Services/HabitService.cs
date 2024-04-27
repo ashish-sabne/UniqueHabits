@@ -4,7 +4,7 @@ using UniqueHabits.Contracts.Models;
 using UniqueHabits.Shared.Constants;
 using UniqueHabits.Shared.Helpers;
 
-namespace UniqueHabits.Contracts.Services
+namespace UniqueHabits.Client.Services
 {
     public class HabitService
     {
