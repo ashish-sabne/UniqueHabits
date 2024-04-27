@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
+using UnqiueHabits.Client.Helpers;
 
 namespace UniqueHabits.Client.Services
 {
@@ -17,7 +18,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var result = await _httpClient.PostAsJsonAsync("api/register", model);
+                var result = await _httpClient.PostWithTokenAsync("api/register", model);
 
                 if (result != null)
                 {
@@ -43,7 +44,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var result = await _httpClient.PostAsJsonAsync("api/login", model);
+                var result = await _httpClient.PostWithTokenAsync("api/login", model);
 
                 if (result != null)
                 {

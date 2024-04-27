@@ -3,6 +3,7 @@ using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Shared.Constants;
 using UniqueHabits.Shared.Helpers;
+using UnqiueHabits.Client.Helpers;
 
 namespace UniqueHabits.Client.Services
 {
@@ -19,7 +20,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var habits = await _httpClient.GetFromJsonAsync<List<HabitModel>>("api/habits");
+                var habits = await _httpClient.GetWithTokenAsync<List<HabitModel>>("api/habits");
                 if (habits.IsAny())
                 {
                     return ApiResult<List<HabitModel>>.Success(habits);
@@ -43,7 +44,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var habit = await _httpClient.GetFromJsonAsync<HabitModel>($"api/habits/{habitId}");
+                var habit = await _httpClient.GetWithTokenAsync<HabitModel>($"api/habits/{habitId}");
 
                 if (habit != null)
                 {
@@ -64,7 +65,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var result = await _httpClient.PostAsJsonAsync("api/habits", habit);
+                var result = await _httpClient.PostWithTokenAsync("api/habits", habit);
 
                 if (result != null)
                 {
@@ -89,7 +90,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var habit = await _httpClient.GetFromJsonAsync<HabitReviewModel>($"api/habits/{habitId}/review");
+                var habit = await _httpClient.GetWithTokenAsync<HabitReviewModel>($"api/habits/{habitId}/review");
 
                 if (habit != null)
                 {
@@ -115,7 +116,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var result = await _httpClient.PostAsJsonAsync($"api/habits/{review.Id}/review", review);
+                var result = await _httpClient.PostWithTokenAsync($"api/habits/{review.Id}/review", review);
 
                 if (result != null)
                 {
