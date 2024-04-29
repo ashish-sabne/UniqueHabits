@@ -1,11 +1,13 @@
-﻿using UniqueHabits.Shared.Enums;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using UniqueHabits.Shared.Enums;
 
 namespace UniqueHabits.Domain.Aggregates
 {
     public partial class Habit
     {
         protected Habit() { }
-        private Habit(Guid id, string systemName, string measurableResult, string why, DateTime startDate, HabitCategory category, string categoryDescription)
+        private Habit(Guid id, string systemName, string measurableResult, string why, DateTime startDate, HabitCategory category, 
+            string categoryDescription, Guid createdById)
         {
             Id = id;
             SystemName = systemName;
@@ -15,6 +17,7 @@ namespace UniqueHabits.Domain.Aggregates
             Category = category;
             CategoryDescription = categoryDescription;
             Implementations = new();
+            CreatedById = createdById.ToString();
         }
 
         public Guid Id { get; private set; }
@@ -24,12 +27,16 @@ namespace UniqueHabits.Domain.Aggregates
         public DateTime StartDate { get; private set; }
         public HabitCategory Category { get; private set; }
         public string? CategoryDescription { get; private set; }
+        public string? CreatedById { get; private set; }
+        [ForeignKey(nameof(CreatedById))]
+        public virtual AppUser CreatedBy { get; private set; }
 
         public virtual List<Implementation> Implementations { get; private set; } = new();
 
-        public static Habit Create(Guid id, string systemName, string measurableResult, string why, DateTime startDate, HabitCategory category, string categoryDescription)
+        public static Habit Create(Guid id, string systemName, string measurableResult, string why, DateTime startDate, HabitCategory category, 
+            string categoryDescription, Guid createdById)
         {
-            return new Habit(id, systemName, measurableResult, why, startDate, category, categoryDescription);
+            return new Habit(id, systemName, measurableResult, why, startDate, category, categoryDescription, createdById);
         }
 
         public void AddImplementation(Implementation implementation)

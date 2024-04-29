@@ -8,6 +8,7 @@ using UniqueHabits.Api.Helpers;
 using UniqueHabits.Data;
 using UniqueHabits.Data.Seed;
 using UniqueHabits.Domain.Aggregates;
+using UniqueHabits.Shared.User;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddScoped<PasswordSeeder>();
+builder.Services.AddScoped<IUser, CurrentUser>();
 
 var app = builder.Build();
 

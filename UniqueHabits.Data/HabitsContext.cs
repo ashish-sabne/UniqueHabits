@@ -31,6 +31,7 @@ namespace UniqueHabits.Data
                 .HasConversion(new EnumToStringConverter<CustomizationCategory>());*/
 
             modelBuilder.Entity<Habit>().Seed();
+            modelBuilder.Entity<Habit>().HasOne(h => h.CreatedBy).WithMany().OnDelete(DeleteBehavior.Restrict);
             
             modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).Seed();
 

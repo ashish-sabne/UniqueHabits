@@ -23,6 +23,7 @@ namespace UniqueHabits.Data.Seed
                     StartDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Unspecified),
                     Category = HabitCategory.Career,
                     CategoryDescription = "",
+                    CreatedById = "7A9BC443-C678-4288-8D23-EFE9CE7E5232"
                 }
             );
         }

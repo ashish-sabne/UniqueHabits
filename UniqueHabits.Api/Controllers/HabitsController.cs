@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Data;
 using UniqueHabits.Domain.Aggregates;
+using UniqueHabits.Shared.User;
 using ImplementationStep = UniqueHabits.Domain.Aggregates.ImplementationStep;
 
 namespace UniqueHabits.Api.Controllers
@@ -16,16 +17,20 @@ namespace UniqueHabits.Api.Controllers
     {
         private readonly HabitsContext _context;
         private readonly IMapper _mapper;
-        public HabitsController(HabitsContext context, IMapper mapper)
+        private readonly IUser _user;
+        public HabitsController(HabitsContext context, IMapper mapper, IUser user)
         {
             _context = context;
             _mapper = mapper;
+            _user = user;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetHabits()
         {
-            var habits = await _context.Habits.ToListAsync();
+            Guid userId;
+
+            var habits = await _context.Habits.Where(h => h.CreatedById.ToLower() == _user.Id.GetValueOrDefault().ToString().ToLower()).ToListAsync();
 
             if (habits == null || !habits.Any())
             {
@@ -59,7 +64,7 @@ namespace UniqueHabits.Api.Controllers
             try
             {
                 var habit = Habit.Create(habitModel.Id, habitModel.SystemName, habitModel.MeasurableResult, habitModel.Why, habitModel.StartDate,
-                    habitModel.Category.GetValueOrDefault(), habitModel.CategoryDescription);
+                    habitModel.Category.GetValueOrDefault(), habitModel.CategoryDescription, _user.Id.GetValueOrDefault());
 
                 var steps = habitModel.ImplementationDetails.Steps.Select(s => ImplementationStep.Create(s.Id, s.Step, s.Sequence)).ToList();
 
