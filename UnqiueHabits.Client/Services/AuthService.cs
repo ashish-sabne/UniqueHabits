@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
+using UnqiueHabits.Client;
 using UnqiueHabits.Client.Helpers;
 
 namespace UniqueHabits.Client.Services
@@ -8,17 +9,19 @@ namespace UniqueHabits.Client.Services
     public class AuthService
     {
         private readonly HttpClient _httpClient;
+        private readonly AuthState _authState;
 
-        public AuthService(HttpClient httpClient)
+        public AuthService(HttpClient httpClient, AuthState authState)
         {
             _httpClient = httpClient;
+            _authState = authState;
         }
 
         public async Task<ApiResult> Register(RegisterModel model)
         {
             try
             {
-                var result = await _httpClient.PostWithTokenAsync("api/register", model);
+                var result = await _httpClient.PostAsJsonAsync("api/register", model);
 
                 if (result != null)
                 {
@@ -44,7 +47,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var result = await _httpClient.PostWithTokenAsync("api/login", model);
+                var result = await _httpClient.PostAsJsonAsync("api/login", model);
 
                 if (result != null)
                 {
@@ -53,6 +56,7 @@ namespace UniqueHabits.Client.Services
                         var authData = await result.Content.ReadFromJsonAsync<AuthUserModel>();
                         if (authData != null)
                         {
+                            await _authState.SetAsync(authData);
                             return ApiResult<AuthUserModel>.Success(authData);
                         }
                     }

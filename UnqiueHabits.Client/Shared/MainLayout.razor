@@ -3,19 +3,24 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <NavMenu ShowAuthenticatedMenuItems="IsAuthenticated" />
     </div>
 
     <main>
         <div class="top-row px-4">
-            @if (AuthState.CurrentUser == null)
+            @if (IsAuthenticated)
             {
-                <Blazorise.Link To="/register">Register</Blazorise.Link>
-                <Blazorise.Link To="/login" class="pl-2">Login</Blazorise.Link>
+                if (AuthState.CurrentUser != null)
+                {
+                    <Badge>Hello, @AuthState.CurrentUser.Name</Badge>
+                }
+                <Blazorise.Link To="javascript::void(0)" Clicked="Logout">Log Out</Blazorise.Link>
             }
             else
             {
-               <Blazorise.Link To="javascript::void(0)" Clicked="Logout">Log Out</Blazorise.Link>
+
+                <Blazorise.Link To="/register">Register</Blazorise.Link>
+                <Blazorise.Link To="/login" class="pl-2">Login</Blazorise.Link>
             }
         </div>
 
@@ -27,10 +32,30 @@
 </div>
 
 @code {
-    
-    void Logout()
+
+    [Inject] AuthState AuthState { get; set; }
+
+    bool IsAuthenticated
     {
-        AuthState.Clear();
+        get
+        {
+            var isAuthenticated = AuthState?.IsAuthenticated() ?? false;
+            return isAuthenticated;
+        }
+    }
+    protected override void OnInitialized()
+    {
+        if (!IsAuthenticated)
+        {
+            Navigation.NavigateTo($"/login?ReturnUrl={Navigation.ToBaseRelativePath(Navigation.Uri)}");
+        }
+
+        base.OnInitialized();
+    }
+
+    async Task Logout()
+    {
+        await AuthState.ClearAsync();
         Navigation.NavigateTo("/login");
     }
 }

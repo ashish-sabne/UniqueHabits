@@ -3,6 +3,7 @@ using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Shared.Constants;
 using UniqueHabits.Shared.Helpers;
+using UnqiueHabits.Client;
 using UnqiueHabits.Client.Helpers;
 
 namespace UniqueHabits.Client.Services
@@ -11,16 +12,18 @@ namespace UniqueHabits.Client.Services
     {
         private readonly HttpClient _httpClient;
 
-        public HabitService(HttpClient httpClient)
+        private string _authToken;
+        public HabitService(HttpClient httpClient, AuthState authState)
         {
             _httpClient = httpClient;
+            _authToken = authState.GetToken() ?? string.Empty;
         }
 
         public async Task<ApiResult<List<HabitModel>>> GetHabits()
         {
             try
             {
-                var habits = await _httpClient.GetWithTokenAsync<List<HabitModel>>("api/habits");
+                var habits = await _httpClient.GetWithTokenAsync<List<HabitModel>>("api/habits", _authToken);
                 if (habits.IsAny())
                 {
                     return ApiResult<List<HabitModel>>.Success(habits);
@@ -44,7 +47,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var habit = await _httpClient.GetWithTokenAsync<HabitModel>($"api/habits/{habitId}");
+                var habit = await _httpClient.GetWithTokenAsync<HabitModel>($"api/habits/{habitId}", _authToken);
 
                 if (habit != null)
                 {
@@ -65,7 +68,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var result = await _httpClient.PostWithTokenAsync("api/habits", habit);
+                var result = await _httpClient.PostWithTokenAsync("api/habits", habit, _authToken);
 
                 if (result != null)
                 {
@@ -90,7 +93,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var habit = await _httpClient.GetWithTokenAsync<HabitReviewModel>($"api/habits/{habitId}/review");
+                var habit = await _httpClient.GetWithTokenAsync<HabitReviewModel>($"api/habits/{habitId}/review", _authToken);
 
                 if (habit != null)
                 {
@@ -114,9 +117,9 @@ namespace UniqueHabits.Client.Services
 
         public async Task<ApiResult> AddHabitReview(HabitReviewModel review)
         {
-            try
+           try
             {
-                var result = await _httpClient.PostWithTokenAsync($"api/habits/{review.Id}/review", review);
+                var result = await _httpClient.PostWithTokenAsync($"api/habits/{review.Id}/review", review, _authToken);
 
                 if (result != null)
                 {

@@ -47,6 +47,10 @@
 
     [Inject] INotificationService NotificationService { get; set; }
 
+    [SupplyParameterFromQuery]
+    [Parameter]
+    public string? ReturnUrl { get; set; }
+
     LoginModel model = new LoginModel();
 
     Validations fluentValidations;
@@ -59,9 +63,16 @@
 
             if (result.IsSuccess && result.Value != null)
             {
-                AuthState.CurrentUser = result.Value;
-                await NotificationService.Success($"Welcome, {AuthState.CurrentUser.Name}!", "Success!");
-                Cancel();
+                await NotificationService.Success($"Welcome, {result.Value.Name}!", "Success!");
+                
+                if (!string.IsNullOrEmpty(ReturnUrl))
+                {
+                    Navigation.NavigateTo(ReturnUrl);
+                }
+                else
+                {
+                    Cancel();
+                }
             }
             else if(!string.IsNullOrEmpty(result.Message))
             {

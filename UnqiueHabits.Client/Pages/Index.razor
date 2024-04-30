@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject HabitService HabitService
+@inject NavigationManager Navigation
 
 <PageTitle>Home</PageTitle>
 
@@ -39,17 +40,18 @@
     List<HabitModel> Habits = new();
     bool showLoading = true;
 
+    [Inject] AuthState AuthState { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         showLoading = true;
         var result = await HabitService.GetHabits();
         showLoading = false;
 
-        if(result.IsSuccess)
+        if (result.IsSuccess)
         {
             Habits = result.Value;
         }
-
         await base.OnInitializedAsync();
     }
 }
