@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Data;
 using UniqueHabits.Domain.Aggregates;
@@ -28,31 +29,51 @@ namespace UniqueHabits.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHabits()
         {
-            Guid userId;
-
-            var habits = await _context.Habits.Where(h => h.CreatedById.ToLower() == _user.Id.GetValueOrDefault().ToString().ToLower()).ToListAsync();
-
-            if (habits == null || !habits.Any())
+            try
             {
-                return NotFound();
-            }
-            var models = _mapper.Map<List<HabitModel>>(habits);
+                var habits = _context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps)
+                                    .Where(IsByCurrentUser).AsQueryable().ToList();
 
-            return Ok(models);
+                if (habits == null || !habits.Any())
+                {
+                    return NotFound();
+                }
+                var models = _mapper.Map<List<HabitModel>>(habits);
+
+                return Ok(models);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
         }
-        
+
+        private bool IsByCurrentUser(Habit habit)
+        {
+            return habit.CreatedById != null && habit.CreatedById.ToLower() == _user.Id.GetValueOrDefault().ToString().ToLower();
+        }
+
         [HttpGet("{habitId}")]
         public async Task<IActionResult> GetHabit(Guid habitId)
         {
-            var habit = await _context.Habits.FindAsync(habitId);
-
-            if (habit == null)
+            try
             {
-                return NotFound();
-            }
-            var model = _mapper.Map<HabitModel>(habit);
+                var habit = _context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps)
+                        .Where(IsByCurrentUser).AsQueryable()
+                        .FirstOrDefault(h => h.Id == habitId);
 
-            return Ok(model);
+                if (habit == null)
+                {
+                    return NotFound();
+                }
+                var model = _mapper.Map<HabitModel>(habit);
+
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
         }
 
         [HttpPost]
@@ -63,13 +84,16 @@ namespace UniqueHabits.Api.Controllers
 
             try
             {
-                var habit = Habit.Create(habitModel.Id, habitModel.SystemName, habitModel.MeasurableResult, habitModel.Why, habitModel.StartDate,
-                    habitModel.Category.GetValueOrDefault(), habitModel.CategoryDescription, _user.Id.GetValueOrDefault());
+                var habit = Habit.Create(habitModel.Id, habitModel.SystemName, habitModel.MeasurableResult, habitModel.Why, 
+                    habitModel.StartDate,habitModel.Category.GetValueOrDefault(), habitModel.CategoryDescription, 
+                    _user.Id.GetValueOrDefault());
 
-                var steps = habitModel.ImplementationDetails.Steps.Select(s => ImplementationStep.Create(s.Id, s.Step, s.Sequence)).ToList();
+                var steps = habitModel.ImplementationDetails.Steps.Select(s => 
+                ImplementationStep.Create(s.Id, s.Step, s.Sequence)).ToList();
 
-                var implementation = Implementation.Create(habitModel.ImplementationDetails.Id, habitModel.Id, habitModel.ImplementationDetails.WithWhat,
-                    habitModel.ImplementationDetails.When, habitModel.ImplementationDetails.Where, habitModel.ImplementationDetails.WithWhom, steps);
+                var implementation = Implementation.Create(habitModel.ImplementationDetails.Id, habitModel.Id, 
+                    habitModel.ImplementationDetails.WithWhat,habitModel.ImplementationDetails.When, 
+                    habitModel.ImplementationDetails.Where, habitModel.ImplementationDetails.WithWhom, steps);
 
                 habit.AddImplementation(implementation);
 
@@ -79,23 +103,31 @@ namespace UniqueHabits.Api.Controllers
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
-                return BadRequest(message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
             }
         }
 
         [HttpGet("{habitId}/review")]
         public async Task<IActionResult> ReviewHabit(Guid habitId)
         {
-            var habit = await _context.Habits.FindAsync(habitId);
-
-            if (habit == null)
+            try
             {
-                return NotFound();
-            }
-            var model = _mapper.Map<HabitReviewModel>(habit);
+                var habit = _context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps)
+                        .Where(IsByCurrentUser).AsQueryable()
+                        .FirstOrDefault(h => h.Id == habitId);
 
-            return Ok(model);
+                if (habit == null)
+                {
+                    return NotFound();
+                }
+                var model = _mapper.Map<HabitReviewModel>(habit);
+
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
         }
         
         [HttpPost("{habitId}/review")]
@@ -103,15 +135,20 @@ namespace UniqueHabits.Api.Controllers
         {
             try
             {
-                var habit = await _context.Habits.FindAsync(model.Id);
+                var habit = _context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps)
+                        .Where(IsByCurrentUser).AsQueryable()
+                        .FirstOrDefault(h => h.Id == model.Id);
 
                 if (habit == null)
                     return NotFound("No habit to review");
 
                 var steps = model.Steps.Select(s => ImplementationStep.Create(Guid.NewGuid(), s.Step, s.Sequence)).ToList();
 
-                habit.AddReview(model.Result, model.CustomizationDescription, model.CustomizationCategory, model.When, model.Where, model.WithWhat,
-                    model.WithWhom, steps);
+                var review = habit.AddReview(model.Result, model.CustomizationDescription, model.CustomizationCategory, model.When, model.Where, 
+                    model.WithWhat, model.WithWhom, steps);
+                /*habit.AddImplementation(Implementation.Create(Guid.NewGuid(), model.Id, model.WithWhat, model.When, model.Where,
+                    model.WithWhom, steps));*/
+                _context.Implementations.Add(review);
 
                 await _context.SaveChangesAsync();
 
@@ -119,8 +156,7 @@ namespace UniqueHabits.Api.Controllers
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
-                return BadRequest(message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
             }
         }
     }

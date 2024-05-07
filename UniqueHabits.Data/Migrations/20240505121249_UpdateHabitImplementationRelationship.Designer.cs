@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniqueHabits.Data;
 
@@ -11,9 +12,11 @@ using UniqueHabits.Data;
 namespace UniqueHabits.Data.Migrations
 {
     [DbContext(typeof(HabitsContext))]
-    partial class HabitsContextModelSnapshot : ModelSnapshot
+    [Migration("20240505121249_UpdateHabitImplementationRelationship")]
+    partial class UpdateHabitImplementationRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -341,7 +344,7 @@ namespace UniqueHabits.Data.Migrations
                         .IsUnique()
                         .HasFilter("[PreviousImplementationId] IS NOT NULL");
 
-                    b.ToTable("Implementations");
+                    b.ToTable("Implementation");
 
                     b.HasData(
                         new
@@ -353,94 +356,6 @@ namespace UniqueHabits.Data.Migrations
                             Where = "On my couch",
                             WithWhat = "Tablet, LinkedIn Learning app, Phone with Evernote (for note-taking), Email",
                             WithWhom = "Share on LinkedIn one thing I learned today"
-                        });
-                });
-
-            modelBuilder.Entity("UniqueHabits.Domain.Aggregates.ImplementationStep", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ImplementationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Step")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ImplementationId");
-
-                    b.ToTable("ImplementationStep");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("20482634-af53-4db0-99d9-cda5a83da543"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 1,
-                            Step = "Play my \"Energy Music\" playlist."
-                        },
-                        new
-                        {
-                            Id = new Guid("1abdf905-808c-4ac7-bdc7-8741694adcb4"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 2,
-                            Step = "Open LinkedIn Learning app on my tablet."
-                        },
-                        new
-                        {
-                            Id = new Guid("c07213c8-c8a6-491e-8ef5-0388cfcc4066"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 3,
-                            Step = "Continue from the last spot I was at when I finished the day before. (If I don’t have a course, do a search for \"Leadership\" and pick the next one on the list that I haven’t taken.)"
-                        },
-                        new
-                        {
-                            Id = new Guid("15c47fda-6c6e-4901-b463-1ab15addac7e"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 4,
-                            Step = "While watching the course, listen for things I can DO that day."
-                        },
-                        new
-                        {
-                            Id = new Guid("e315e429-fbd6-4a9f-9df3-e3e4bfbb584c"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 5,
-                            Step = "Make notes in Evernote, especially on actions I can take."
-                        },
-                        new
-                        {
-                            Id = new Guid("3dba9c2e-218d-4dad-b1f2-264a4cea85b1"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 6,
-                            Step = "Make notes in Evernote, especially on actions I can take."
-                        },
-                        new
-                        {
-                            Id = new Guid("c61bb021-d507-4cdd-bb5a-7cb0b33b7f28"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 7,
-                            Step = "After 20 minutes, stop."
-                        },
-                        new
-                        {
-                            Id = new Guid("a319ba49-3228-4e61-8ea9-5208d616af07"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 8,
-                            Step = "Copy what I wrote and send myself an email."
-                        },
-                        new
-                        {
-                            Id = new Guid("6d07f8b3-81d6-4cf9-83b5-583029d84185"),
-                            ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
-                            Sequence = 9,
-                            Step = "Read the email when starting my work."
                         });
                 });
 
@@ -508,7 +423,7 @@ namespace UniqueHabits.Data.Migrations
 
             modelBuilder.Entity("UniqueHabits.Domain.Aggregates.Implementation", b =>
                 {
-                    b.HasOne("UniqueHabits.Domain.Aggregates.Habit", "Habit")
+                    b.HasOne("UniqueHabits.Domain.Aggregates.Habit", null)
                         .WithMany("Implementations")
                         .HasForeignKey("HabitId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -518,27 +433,103 @@ namespace UniqueHabits.Data.Migrations
                         .WithOne()
                         .HasForeignKey("UniqueHabits.Domain.Aggregates.Implementation", "PreviousImplementationId");
 
-                    b.Navigation("Habit");
+                    b.OwnsMany("UniqueHabits.Domain.Aggregates.ImplementationStep", "Steps", b1 =>
+                        {
+                            b1.Property<Guid>("ImplementationId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Sequence")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Step")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("ImplementationId", "Id");
+
+                            b1.ToTable("ImplementationStep");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ImplementationId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("20482634-af53-4db0-99d9-cda5a83da543"),
+                                    Sequence = 1,
+                                    Step = "Play my \"Energy Music\" playlist."
+                                },
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("1abdf905-808c-4ac7-bdc7-8741694adcb4"),
+                                    Sequence = 2,
+                                    Step = "Open LinkedIn Learning app on my tablet."
+                                },
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("c07213c8-c8a6-491e-8ef5-0388cfcc4066"),
+                                    Sequence = 3,
+                                    Step = "Continue from the last spot I was at when I finished the day before. (If I don’t have a course, do a search for \"Leadership\" and pick the next one on the list that I haven’t taken.)"
+                                },
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("15c47fda-6c6e-4901-b463-1ab15addac7e"),
+                                    Sequence = 4,
+                                    Step = "While watching the course, listen for things I can DO that day."
+                                },
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("e315e429-fbd6-4a9f-9df3-e3e4bfbb584c"),
+                                    Sequence = 5,
+                                    Step = "Make notes in Evernote, especially on actions I can take."
+                                },
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("3dba9c2e-218d-4dad-b1f2-264a4cea85b1"),
+                                    Sequence = 6,
+                                    Step = "Make notes in Evernote, especially on actions I can take."
+                                },
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("c61bb021-d507-4cdd-bb5a-7cb0b33b7f28"),
+                                    Sequence = 7,
+                                    Step = "After 20 minutes, stop."
+                                },
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("a319ba49-3228-4e61-8ea9-5208d616af07"),
+                                    Sequence = 8,
+                                    Step = "Copy what I wrote and send myself an email."
+                                },
+                                new
+                                {
+                                    ImplementationId = new Guid("0fd52347-6f3c-461f-b05d-57ae63e9a9f4"),
+                                    Id = new Guid("6d07f8b3-81d6-4cf9-83b5-583029d84185"),
+                                    Sequence = 9,
+                                    Step = "Read the email when starting my work."
+                                });
+                        });
 
                     b.Navigation("PreviousImplementation");
-                });
 
-            modelBuilder.Entity("UniqueHabits.Domain.Aggregates.ImplementationStep", b =>
-                {
-                    b.HasOne("UniqueHabits.Domain.Aggregates.Implementation", null)
-                        .WithMany("Steps")
-                        .HasForeignKey("ImplementationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Navigation("Steps");
                 });
 
             modelBuilder.Entity("UniqueHabits.Domain.Aggregates.Habit", b =>
                 {
                     b.Navigation("Implementations");
-                });
-
-            modelBuilder.Entity("UniqueHabits.Domain.Aggregates.Implementation", b =>
-                {
-                    b.Navigation("Steps");
                 });
 #pragma warning restore 612, 618
         }

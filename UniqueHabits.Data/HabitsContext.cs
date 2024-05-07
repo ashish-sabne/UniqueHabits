@@ -15,27 +15,27 @@ namespace UniqueHabits.Data
         }
 
         public DbSet<Habit> Habits { get; set; }
+        public DbSet<Implementation> Implementations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).Property(h => h.CustomizationCategory)
-                .HasConversion(new EnumToStringConverter<CustomizationCategory>());
-            modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).OwnsMany(i => i.Steps);
-
+            modelBuilder.Entity<Habit>().HasMany(h => h.Implementations).WithOne(i => i.Habit).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Habit>().Property(h => h.Category)
                 .HasConversion(new EnumToStringConverter<HabitCategory>());
 
-            /*modelBuilder.Entity<Implementation>().Property(h => h.CustomizationCategory)
-                .HasConversion(new EnumToStringConverter<CustomizationCategory>());*/
+            modelBuilder.Entity<Implementation>().Property(h => h.CustomizationCategory)
+                .HasConversion(new EnumToStringConverter<CustomizationCategory>());
+            modelBuilder.Entity<Implementation>().HasOne(i => i.PreviousImplementation).WithOne().IsRequired(false);
+            modelBuilder.Entity<Implementation>().HasMany(i => i.Steps).WithOne().OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Habit>().Seed();
             modelBuilder.Entity<Habit>().HasOne(h => h.CreatedBy).WithMany().OnDelete(DeleteBehavior.Restrict);
-            
-            modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).Seed();
 
-            modelBuilder.Entity<Habit>().OwnsMany(h => h.Implementations).OwnsMany(i => i.Steps).Seed();
+            modelBuilder.Entity<Implementation>().Seed();
+
+            modelBuilder.Entity<ImplementationStep>().Seed();
 
             modelBuilder.Entity<AppUser>().Seed();
         }

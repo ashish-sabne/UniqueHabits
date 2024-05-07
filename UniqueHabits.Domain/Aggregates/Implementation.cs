@@ -37,6 +37,7 @@ namespace UniqueHabits.Domain.Aggregates
 
         public Guid Id { get; private set; }
         public Guid HabitId { get; private set; }
+        public virtual Habit Habit { get; private set; }
         public string WithWhat { get; private set; }
         public string When { get; private set; }
         public string Where { get; private set; }

@@ -21,7 +21,7 @@ namespace UniqueHabits.Domain.Aggregates
         public virtual List<ImplementationStep> Steps => LatestImplementation?.Steps?.OrderBy(s => s.Sequence)?.ToList() ?? new();
         public DateTime LastImplementationDate => LatestImplementation?.CreatedDate ?? DateTime.Today;
 
-        public void AddReview(string result, string customizationDescription, CustomizationCategory customizationCategory, string when, string where, 
+        public Implementation AddReview(string result, string customizationDescription, CustomizationCategory customizationCategory, string when, string where, 
             string withWhat, string withWhom, List<ImplementationStep> steps)
         {
             var stepsCopy = Steps.Select(s => ImplementationStep.Create(Guid.NewGuid(), s.Step, s.Sequence)).ToList();
@@ -48,7 +48,7 @@ namespace UniqueHabits.Domain.Aggregates
                 default:
                     break;
             }
-            AddImplementation(newImplementation);
+            return newImplementation;
         }
     }
 }

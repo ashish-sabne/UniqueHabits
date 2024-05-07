@@ -28,7 +28,7 @@ namespace UniqueHabits.Data.Seed
             );
         }
 
-        public static DataBuilder Seed(this OwnedNavigationBuilder<Habit, Implementation> b)
+        public static DataBuilder Seed(this EntityTypeBuilder<Implementation> b)
         {
             return b.HasData(
                 new
@@ -44,7 +44,7 @@ namespace UniqueHabits.Data.Seed
             );
         }
 
-        public static DataBuilder Seed(this OwnedNavigationBuilder<Implementation, ImplementationStep> b)
+        public static DataBuilder Seed(this EntityTypeBuilder<ImplementationStep> b)
         {
             return b.HasData(
                 new
