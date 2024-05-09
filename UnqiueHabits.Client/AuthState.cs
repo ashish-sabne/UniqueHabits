@@ -45,7 +45,16 @@ namespace UnqiueHabits.Client
         public bool IsAuthenticated()
         {
             var token = GetToken();
-            return !string.IsNullOrEmpty(token);
+            if(string.IsNullOrEmpty(token))
+                return false;
+            var currentUser = _syncLocalStorageService.GetItem<AuthUserModel>("CurrentUser");
+
+            if (currentUser == null || currentUser.ExpiryDate < DateTime.Now)
+            {
+                return false;
+            }
+            return true;
+
         }
     }
 }
