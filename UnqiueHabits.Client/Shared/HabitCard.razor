@@ -4,7 +4,9 @@
         <CardBody>
             <Row>
                 <Column ColumnSize="ColumnSize.Is1">
-                    <Icon Style="@CategoryIconStyle" Name="@CategoryIcon" IconSize="IconSize.x4" TextColor="TextColor.Success" title="@CategoryToolTip" />
+                    <Tooltip Text="@CategoryToolTip" Placement="TooltipPlacement.Bottom">
+                        <Icon Style="@CategoryIconStyle" Name="@CategoryIcon" IconSize="IconSize.x4" TextColor="TextColor.Success" />
+                    </Tooltip>
                 </Column>
                 <Column ColumnSize="ColumnSize.Is11">
                     <CardTitle Size="5">
