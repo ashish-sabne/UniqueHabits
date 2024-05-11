@@ -2,33 +2,70 @@
 @inject NavigationManager Navigation
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu ShowAuthenticatedMenuItems="IsAuthenticated" />
-    </div>
+    <Layout Sider>
+        <LayoutSider>
+            <LayoutSiderContent>
+                <NavMenu ShowAuthenticatedMenuItems="IsAuthenticated" />
+            </LayoutSiderContent>
+        </LayoutSider>
+        <Layout>
+            <LayoutHeader Fixed>
+                <Bar Mode="BarMode.Horizontal" Breakpoint="Breakpoint.Desktop" Background="Background.Light" 
+                    ThemeContrast="ThemeContrast.Light">
+                    <BarToggler />
+                    <BarMenu>
+                        <BarEnd>
+                            @if (IsAuthenticated)
+                            {
+                                if (AuthState.CurrentUser != null)
+                                {
+                                    <BarItem>
+                                        <BarLabel>Hello, @AuthState.CurrentUser.Name</BarLabel>
+                                    </BarItem>
+                                    <BarItem>
+                                        <Blazorise.Link To="javascript::void(0)" Clicked="Logout" 
+                                            Padding="Padding.Is2">
+                                            Log out
+                                        </Blazorise.Link>
+                                    </BarItem>
+                                    
+                                }
+                            }
+                            else
+                            {
+                                <BarItem>
+                                    <Blazorise.Link To="/register">Register</Blazorise.Link>
+                                    <Blazorise.Link To="/login" Padding="Padding.Is2">Log in</Blazorise.Link>
+                                </BarItem>
+                            }
+                        </BarEnd>
+                    </BarMenu>
+                </Bar>
+                @* 
+                    <div class="top-row px-4">
+                    @if (IsAuthenticated)
+                    {
+                        if (AuthState.CurrentUser != null)
+                        {
+                            <Badge>Hello, @AuthState.CurrentUser.Name</Badge>
+                        }
+                        <Blazorise.Link To="javascript::void(0)" Clicked="Logout">Log Out</Blazorise.Link>
+                    }
+                    else
+                    {
 
-    <main>
-        <div class="top-row px-4">
-            @if (IsAuthenticated)
-            {
-                if (AuthState.CurrentUser != null)
-                {
-                    <Badge>Hello, @AuthState.CurrentUser.Name</Badge>
-                }
-                <Blazorise.Link To="javascript::void(0)" Clicked="Logout">Log Out</Blazorise.Link>
-            }
-            else
-            {
-
-                <Blazorise.Link To="/register">Register</Blazorise.Link>
-                <Blazorise.Link To="/login" class="pl-2">Login</Blazorise.Link>
-            }
-        </div>
-
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+                        <Blazorise.Link To="/register">Register</Blazorise.Link>
+                        <Blazorise.Link To="/login" class="pl-2">Login</Blazorise.Link>
+                    }
+                </div> *@
+            </LayoutHeader>
+            <LayoutContent>
+                <article class="content px-4">
+                    @Body
+                </article>
+            </LayoutContent>
+        </Layout>
+    </Layout>
 </div>
 
 @code {

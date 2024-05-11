@@ -42,6 +42,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (!(AuthState?.IsAuthenticated() ?? false))
+        {
+            Navigation.NavigateTo($"/login?ReturnUrl={Navigation.ToBaseRelativePath(Navigation.Uri)}");
+            return;
+        }
         showLoading = true;
         var result = await HabitService.GetHabits();
         showLoading = false;

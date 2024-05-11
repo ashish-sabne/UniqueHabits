@@ -16,6 +16,7 @@ namespace UniqueHabits.Data
 
         public DbSet<Habit> Habits { get; set; }
         public DbSet<Implementation> Implementations { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +39,12 @@ namespace UniqueHabits.Data
             modelBuilder.Entity<ImplementationStep>().Seed();
 
             modelBuilder.Entity<AppUser>().Seed();
+
+            modelBuilder.Entity<Notification>().Property(n => n.NotificationType)
+                .HasConversion(new EnumToStringConverter<NotificationType>());
+
+            modelBuilder.Entity<Notification>().HasOne(n => n.Habit).WithMany();
+            modelBuilder.Entity<Notification>().HasOne(n => n.CreatedBy).WithMany(au => au.Notifications);
         }
     }
 }

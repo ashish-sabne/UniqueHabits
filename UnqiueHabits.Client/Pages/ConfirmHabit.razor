@@ -90,6 +90,12 @@
         <Button Color="Color.Primary" Float="Float.Start" Margin="Margin.Is2" Type="ButtonType.Link" To="/">
             <Icon Name="IconName.ArrowLeft" /> Back
         </Button>
+        @if (habit.ImplementationDetails?.IsImplementationDue ?? false)
+        {
+            <Button Color="Color.Primary" Float="Float.End" Margin="Margin.Is2" Type="ButtonType.Link" To="@($"/{habit.Id}/review")">
+                Review <Icon Name="Blazorise.Icons.Material.MaterialIcons.RemoveRedEye" Margin="Margin.Is1.FromStart" />
+            </Button>
+        }
     }
 </Div>
 

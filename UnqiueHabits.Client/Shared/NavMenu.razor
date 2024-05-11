@@ -1,31 +1,29 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">
-            <Icon Name="IconName.Fingerprint"></Icon>Hi-bits
-        </a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿<Bar Mode="BarMode.VerticalInline" CollapseMode="BarCollapseMode.Small"
+     Breakpoint="Breakpoint.Desktop" Background="Background.Light" ThemeContrast="ThemeContrast.Light">
+    <BarToggler />
+    <BarBrand>
+        <BarItem>
+            <BarLink To="/">
+                <BarIcon IconName="IconName.Fingerprint" />
+                Hi-bits
+            </BarLink>
+        </BarItem>
+    </BarBrand>
+    <BarMenu>
+        @if (ShowAuthenticatedMenuItems)
+        {
+            <BarItem>
+                <BarLink To="/" Match="Match.All">
+                    <BarIcon IconName="IconName.Home" /> Home
+                </BarLink>
+                <BarLink To="add-habit">
+                    <BarIcon IconName="IconName.Add" /> Add Habit
+                </BarLink>
+            </BarItem>
+        }
+    </BarMenu>
+</Bar>
 
-@if (ShowAuthenticatedMenuItems)
-{
-    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-        <nav class="flex-column">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="oi oi-home" aria-hidden="true"></span> Home
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="add-habit">
-                    <span class="oi oi-plus" aria-hidden="true"></span> Add Habit
-                </NavLink>
-            </div>
-        </nav>
-    </div>
-}
 
 
 @code {

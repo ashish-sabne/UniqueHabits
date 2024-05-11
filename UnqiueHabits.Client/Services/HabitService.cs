@@ -100,7 +100,8 @@ namespace UniqueHabits.Client.Services
                     var days = (DateTime.Today - habit.LastImplementationDate).Days;
                     if (days < SettingConstants.SprintLengthInDays)
                     {
-                        return ApiResult<HabitReviewModel>.Failure("Habit not ready for review!");
+                        return ApiResult<HabitReviewModel>.Failure(
+                            $"Habit not ready for review until {habit.LastImplementationDate.AddDays(SettingConstants.SprintLengthInDays):MMM d, yyy}.");
                     }
                     return ApiResult<HabitReviewModel>.Success(habit);
                 }

@@ -6,6 +6,8 @@ using System.Net;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Data;
 using UniqueHabits.Domain.Aggregates;
+using UniqueHabits.Shared.Constants;
+using UniqueHabits.Shared.Enums;
 using UniqueHabits.Shared.User;
 using ImplementationStep = UniqueHabits.Domain.Aggregates.ImplementationStep;
 
@@ -98,6 +100,12 @@ namespace UniqueHabits.Api.Controllers
                 habit.AddImplementation(implementation);
 
                 await _context.Habits.AddAsync(habit);
+
+                var reviewNotification = Notification.Create(Guid.NewGuid(), "Uour habit is due for review",
+                    DateTime.Now.AddDays(SettingConstants.SprintLengthInDays), habit.Id, _user.Id.GetValueOrDefault(), NotificationType.ReviewDue);
+
+                await _context.Notifications.AddAsync(reviewNotification);
+
                 await _context.SaveChangesAsync();
                 return Ok();
             }
@@ -146,9 +154,13 @@ namespace UniqueHabits.Api.Controllers
 
                 var review = habit.AddReview(model.Result, model.CustomizationDescription, model.CustomizationCategory, model.When, model.Where, 
                     model.WithWhat, model.WithWhom, steps);
-                /*habit.AddImplementation(Implementation.Create(Guid.NewGuid(), model.Id, model.WithWhat, model.When, model.Where,
-                    model.WithWhom, steps));*/
+
                 _context.Implementations.Add(review);
+
+                var reviewNotification = Notification.Create(Guid.NewGuid(), "Your habit is due for review",
+                    DateTime.Today.AddDays(SettingConstants.SprintLengthInDays), habit.Id, _user.Id.GetValueOrDefault(), NotificationType.ReviewDue);
+
+                await _context.Notifications.AddAsync(reviewNotification);
 
                 await _context.SaveChangesAsync();
 
