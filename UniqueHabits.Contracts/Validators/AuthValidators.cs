@@ -52,4 +52,13 @@ namespace UniqueHabits.Contracts.Validators
             RuleFor(m => m.Password).NotEmpty();
         }
     }
+
+    public class AuthUserValidator : AbstractValidator<AuthUserModel>
+    {
+        public AuthUserValidator()
+        {
+            RuleFor(m => m.FirstName).NotEmpty();
+            RuleFor(m => m.Email).NotEmpty().EmailAddress();
+        }
+    }
 }

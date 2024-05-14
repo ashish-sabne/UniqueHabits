@@ -10,8 +10,8 @@
         </LayoutSider>
         <Layout>
             <LayoutHeader Fixed>
-                <Bar Mode="BarMode.Horizontal" Breakpoint="Breakpoint.Desktop" Background="Background.Light" 
-                    ThemeContrast="ThemeContrast.Light">
+                <Bar Mode="BarMode.Horizontal" Breakpoint="Breakpoint.Desktop" ThemeContrast="ThemeContrast.Dark"
+                     Style="background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);">
                     <BarToggler />
                     <BarMenu>
                         <BarEnd>
@@ -23,41 +23,33 @@
                                         <BarLabel>Hello, @AuthState.CurrentUser.Name</BarLabel>
                                     </BarItem>
                                     <BarItem>
-                                        <Blazorise.Link To="javascript::void(0)" Clicked="Logout" 
-                                            Padding="Padding.Is2">
+                                        <Blazorise.Link TextColor="TextColor.White" To="/preferences" Padding="Padding.Is3.OnX">
+                                            Preferences
+                                        </Blazorise.Link>
+                                    </BarItem>
+                                    <BarItem>
+                                        <Blazorise.Link TextColor="TextColor.White" To="javascript::void(0)"
+                                            Clicked="Logout" Padding="Padding.Is3.OnX">
                                             Log out
                                         </Blazorise.Link>
                                     </BarItem>
-                                    
+
                                 }
                             }
                             else
                             {
                                 <BarItem>
-                                    <Blazorise.Link To="/register">Register</Blazorise.Link>
-                                    <Blazorise.Link To="/login" Padding="Padding.Is2">Log in</Blazorise.Link>
+                                    <Blazorise.Link TextColor="TextColor.White" To="/register">
+                                        Register
+                                    </Blazorise.Link>
+                                    <Blazorise.Link TextColor="TextColor.White" To="/login" Padding="Padding.Is2">
+                                        Log in
+                                    </Blazorise.Link>
                                 </BarItem>
                             }
                         </BarEnd>
                     </BarMenu>
                 </Bar>
-                @* 
-                    <div class="top-row px-4">
-                    @if (IsAuthenticated)
-                    {
-                        if (AuthState.CurrentUser != null)
-                        {
-                            <Badge>Hello, @AuthState.CurrentUser.Name</Badge>
-                        }
-                        <Blazorise.Link To="javascript::void(0)" Clicked="Logout">Log Out</Blazorise.Link>
-                    }
-                    else
-                    {
-
-                        <Blazorise.Link To="/register">Register</Blazorise.Link>
-                        <Blazorise.Link To="/login" class="pl-2">Login</Blazorise.Link>
-                    }
-                </div> *@
             </LayoutHeader>
             <LayoutContent>
                 <article class="content px-4">

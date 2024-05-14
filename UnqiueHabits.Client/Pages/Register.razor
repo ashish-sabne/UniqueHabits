@@ -67,6 +67,14 @@
                     </Field>
                 </Validation>
 
+                <Validation>
+                    <Field ColumnSize="ColumnSize.IsFull">
+                        <FieldBody>
+                            <Switch TValue="bool" @bind-Checked="@model.EnableNotifications">Enable Notifications</Switch>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+
                 <Field ColumnSize="ColumnSize.IsFull">
                     <Button Color="Color.Primary" Type="ButtonType.Submit" Float="Float.End" Margin="Margin.Is2">Submit</Button>
                     <Button Color="Color.Light" Type="ButtonType.Reset" Float="Float.Start" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>

@@ -25,8 +25,9 @@ namespace UniqueHabits.Data.Seed
                     LockoutEnabled = false,
                     PhoneNumberConfirmed = false,
                     TwoFactorEnabled = false,
+                    EnableNotifications = true,
                 }
-            );
+            ); ;
         }
     }
 }

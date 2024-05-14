@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -15,10 +16,12 @@ namespace UniqueHabits.Api.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private IConfiguration _config;
-        public AuthController(UserManager<AppUser> userManager, IConfiguration config)
+        private readonly IMapper _mapper;
+        public AuthController(UserManager<AppUser> userManager, IConfiguration config, IMapper mapper)
         {
             _userManager = userManager;
             _config = config;
+            _mapper = mapper;
         }
 
         [Route("api/register")]
@@ -33,7 +36,7 @@ namespace UniqueHabits.Api.Controllers
             if (userExists != null)
                 return BadRequest("User already exists");
 
-            var user = AppUser.Create(model.FirstName, model.LastName, model.Email);
+            var user = AppUser.Create(model.FirstName, model.LastName, model.Email, model.EnableNotifications);
 
             try
             {
@@ -77,13 +80,11 @@ namespace UniqueHabits.Api.Controllers
 
                 var token = GetToken(authClaims);
 
-                return Ok(new AuthUserModel
-                {
-                    Id = Guid.Parse(user.Id),
-                    Name = user.Name,
-                    Token = new JwtSecurityTokenHandler().WriteToken(token),
-                    ExpiryDate = token.ValidTo
-                });
+                var auth = _mapper.Map<AuthUserModel>(user);
+                auth.Token = new JwtSecurityTokenHandler().WriteToken(token);
+                auth.ExpiryDate = token.ValidTo;
+                
+                return Ok(auth);
             }
             return Unauthorized();
 

@@ -42,6 +42,8 @@ namespace UniqueHabits.Client.Services
                 return ApiResult.Failure(ex.Message);
             }
         }
+        
+        
 
         public async Task<ApiResult<AuthUserModel>> Login(LoginModel model)
         {
@@ -71,6 +73,34 @@ namespace UniqueHabits.Client.Services
             catch (Exception ex)
             {
                 return ApiResult<AuthUserModel>.Failure(ex.Message);
+            }
+        }
+        
+        public async Task<ApiResult> UpdatePreferences(AuthUserModel model)
+        {
+            try
+            {
+                var result = await _httpClient.PutWithTokenAsync("api/user", model, _authState.GetToken() ?? string.Empty);
+
+                if (result != null)
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        await _authState.ClearAsync();
+                        await _authState.SetAsync(model);
+                        return ApiResult.Success();
+                    }
+                    else
+                    {
+                        var contents = await result.Content.ReadAsStringAsync();
+                        return ApiResult.Failure(result.ReasonPhrase);
+                    }
+                }
+                return ApiResult.Failure();
+            }
+            catch (Exception ex)
+            {
+                return ApiResult.Failure(ex.Message);
             }
         }
     }

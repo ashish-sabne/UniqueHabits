@@ -1,0 +1,103 @@
+﻿@page "/preferences"
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<Card Border="Border.Is1">
+    <CardBody>
+        <EditForm Model="@model" OnValidSubmit="UpdatePreferences">
+            <Validations @ref="@fluentValidations" Mode="ValidationMode.Manual" Model="@model" HandlerType="typeof(FluentValidationHandler)">
+                <Blazorise.ValidationSummary />
+                <Validation>
+                    <Field ColumnSize="ColumnSize.IsFull">
+                        <FieldLabel Class="col-form-label" RequiredIndicator>Email</FieldLabel>
+                        <FieldBody>
+                            <TextEdit Disabled ReadOnly @bind-Text="@model.Email" Placeholder="Email">
+                             </TextEdit>
+                         </FieldBody>
+                     </Field>
+                 </Validation>
+                 <Validation>
+                     <Field ColumnSize="ColumnSize.IsFull">
+                         <FieldLabel Class="col-form-label" RequiredIndicator>First Name</FieldLabel>
+                        <FieldBody>
+                            <TextEdit @bind-Text="@model.FirstName" Placeholder="First Name">
+                                <Feedback>
+                                </Feedback>
+                            </TextEdit>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+
+                <Field ColumnSize="ColumnSize.IsFull">
+                    <FieldLabel Class="col-form-label">Last Name</FieldLabel>
+                    <FieldBody>
+                        <TextEdit @bind-Text="@model.LastName" Placeholder="Last Name">
+                            <Feedback>
+                            </Feedback>
+                        </TextEdit>
+                    </FieldBody>
+                </Field>
+
+                <Validation>
+                    <Field ColumnSize="ColumnSize.IsFull">
+                        <FieldBody>
+                            <Switch TValue="bool" @bind-Checked="@model.EnableNotifications">Enable Notifications</Switch>
+                        </FieldBody>
+                    </Field>
+                </Validation>
+
+                <Field ColumnSize="ColumnSize.IsFull">
+                    <Button Color="Color.Primary" Type="ButtonType.Submit" Float="Float.End" Margin="Margin.Is2">Submit</Button>
+                    <Button Color="Color.Light" Type="ButtonType.Reset" Float="Float.Start" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>
+                </Field>
+            </Validations>
+        </EditForm>
+    </CardBody>
+</Card>
+
+@code {
+    [Inject] INotificationService NotificationService { get; set; }
+    [Inject] AuthState AuthState { get; set; }
+
+    AuthUserModel model = new();
+
+    Validations fluentValidations;
+
+    bool notificationEnabled = false;
+
+    protected override void OnInitialized()
+    {
+        model = AuthState?.CurrentUser ?? new();
+        notificationEnabled = model.EnableNotifications;
+        base.OnInitialized();
+    }
+
+    private async Task UpdatePreferences()
+    {
+        if (await fluentValidations.ValidateAll())
+        {
+            //If newly enabled notifications, ask for permission
+            if (!notificationEnabled && model.EnableNotifications)
+            {
+
+            }
+
+            var result = await AuthService.UpdatePreferences(model);
+
+            if (result.IsSuccess)
+            {
+                await NotificationService.Success("Preferences updated successfully!", "Success!");
+                Cancel();
+            }
+            else
+            {
+                await NotificationService.Error($"Error adding user - {result.Message}", "Error!");
+            }
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
