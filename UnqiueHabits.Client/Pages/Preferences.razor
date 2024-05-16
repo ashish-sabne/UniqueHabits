@@ -5,7 +5,8 @@
 <Card Border="Border.Is1">
     <CardBody>
         <EditForm Model="@model" OnValidSubmit="UpdatePreferences">
-            <Validations @ref="@fluentValidations" Mode="ValidationMode.Manual" Model="@model" HandlerType="typeof(FluentValidationHandler)">
+            <Validations @ref="@fluentValidations" Mode="ValidationMode.Manual" Model="@model" 
+                HandlerType="typeof(FluentValidationHandler)">
                 <Blazorise.ValidationSummary />
                 <Validation>
                     <Field ColumnSize="ColumnSize.IsFull">
@@ -16,6 +17,7 @@
                          </FieldBody>
                      </Field>
                  </Validation>
+                 
                  <Validation>
                      <Field ColumnSize="ColumnSize.IsFull">
                          <FieldLabel Class="col-form-label" RequiredIndicator>First Name</FieldLabel>
@@ -38,17 +40,19 @@
                     </FieldBody>
                 </Field>
 
-                <Validation>
-                    <Field ColumnSize="ColumnSize.IsFull">
-                        <FieldBody>
-                            <Switch TValue="bool" @bind-Checked="@model.EnableNotifications">Enable Notifications</Switch>
-                        </FieldBody>
-                    </Field>
-                </Validation>
+                <Field ColumnSize="ColumnSize.IsFull">
+                    <FieldBody>
+                        <Switch TValue="bool" Checked="@model.EnableNotifications"
+                                CheckedChanged="@OnEnableNotificationsChanged">Enable Notifications</Switch>
+                    </FieldBody>
+                </Field>
 
                 <Field ColumnSize="ColumnSize.IsFull">
                     <Button Color="Color.Primary" Type="ButtonType.Submit" Float="Float.End" Margin="Margin.Is2">Submit</Button>
-                    <Button Color="Color.Light" Type="ButtonType.Reset" Float="Float.Start" Margin="Margin.Is2" Clicked="Cancel">Cancel</Button>
+                    <Button Color="Color.Light" Type="ButtonType.Reset" Float="Float.Start" 
+                        Margin="Margin.Is2" Clicked="Cancel">
+                            Cancel
+                    </Button>
                 </Field>
             </Validations>
         </EditForm>
@@ -57,6 +61,7 @@
 
 @code {
     [Inject] INotificationService NotificationService { get; set; }
+    [Inject] private Append.Blazor.Notifications.INotificationService DeviceNotificationService { get; set; }
     [Inject] AuthState AuthState { get; set; }
 
     AuthUserModel model = new();
@@ -72,16 +77,28 @@
         base.OnInitialized();
     }
 
+    async Task OnEnableNotificationsChanged(bool value)
+    {
+        model.EnableNotifications = value;
+
+        //If newly enabled notifications, ask for permission
+        if (!notificationEnabled && model.EnableNotifications && await DeviceNotificationService.IsSupportedByBrowserAsync())
+        {
+            Append.Blazor.Notifications.PermissionType permission = await DeviceNotificationService.RequestPermissionAsync();
+
+            if (permission != Append.Blazor.Notifications.PermissionType.Granted)
+            {
+                await NotificationService.Error(@"Permission to show notifications is denied. 
+                    Please allow notifications for this site in the browser and try again!", "Error!");
+                model.EnableNotifications = false;
+            }
+        }
+    }
+
     private async Task UpdatePreferences()
     {
         if (await fluentValidations.ValidateAll())
         {
-            //If newly enabled notifications, ask for permission
-            if (!notificationEnabled && model.EnableNotifications)
-            {
-
-            }
-
             var result = await AuthService.UpdatePreferences(model);
 
             if (result.IsSuccess)

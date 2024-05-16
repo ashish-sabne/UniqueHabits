@@ -1,3 +1,4 @@
+using Append.Blazor.Notifications;
 using Blazored.LocalStorage;
 using Blazorise;
 using Blazorise.FluentValidation;
@@ -43,5 +44,7 @@ builder.Services
     .AddMaterialIcons()
     .AddBlazoriseFluentValidation()
     .AddValidatorsFromAssembly(typeof(HabitValidator).Assembly);
+
+builder.Services.AddNotifications();
 
 await builder.Build().RunAsync();

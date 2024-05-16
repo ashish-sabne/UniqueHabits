@@ -70,7 +70,8 @@
                 <Validation>
                     <Field ColumnSize="ColumnSize.IsFull">
                         <FieldBody>
-                            <Switch TValue="bool" @bind-Checked="@model.EnableNotifications">Enable Notifications</Switch>
+                            <Switch TValue="bool" Checked="@model.EnableNotifications"
+                                    CheckedChanged="@OnEnableNotificationsChanged">Enable Notifications</Switch>
                         </FieldBody>
                     </Field>
                 </Validation>
@@ -90,10 +91,27 @@
 @code {
 
     [Inject] INotificationService NotificationService { get; set; }
+    [Inject] private Append.Blazor.Notifications.INotificationService DeviceNotificationService { get; set; }
 
     RegisterModel model = new RegisterModel();
 
     Validations fluentValidations;
+
+    async Task OnEnableNotificationsChanged(bool value)
+    {
+        model.EnableNotifications = value;
+
+        //If newly enabled notifications, ask for permission
+        if (model.EnableNotifications && await DeviceNotificationService.IsSupportedByBrowserAsync())
+        {
+            Append.Blazor.Notifications.PermissionType permission = await DeviceNotificationService.RequestPermissionAsync();
+
+            if (permission != Append.Blazor.Notifications.PermissionType.Granted)
+            {
+                model.EnableNotifications = false;
+            }
+        }
+    }
 
     private async Task RegisterUser()
     {
