@@ -1,0 +1,30 @@
+﻿@inject NavigationManager Navigation
+
+@if (Notification != null)
+{
+    <BarDropdownItem Style="width: 300px; cursor: pointer" Clicked="GoToHabit" 
+        Background="Notification.IsRead ? Background.Default : Background.Light">
+        <CardText TextSize="TextSize.Small" TextColor="TextColor.Dark">@Notification.Title</CardText>
+        <CardText TextSize="TextSize.ExtraSmall" TextColor="TextColor.Info" TextAlignment="TextAlignment.End">
+            <Icon Name="IconName.Clock" TextSize="TextSize.Small"></Icon> @Notification.DurationSince
+        </CardText>
+    </BarDropdownItem>
+    <BarDropdownDivider></BarDropdownDivider>
+}
+
+
+@code {
+    [Parameter]
+    public NotificationModel Notification { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnRead { get; set; }
+
+    async Task GoToHabit()
+    {
+        if (!Notification.IsRead)
+            await OnRead.InvokeAsync(Notification.Id);
+        
+        Navigation.NavigateTo($"/details/{Notification.HabitId}");
+    }
+}

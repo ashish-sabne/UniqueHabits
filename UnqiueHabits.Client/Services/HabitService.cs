@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Json;
-using UniqueHabits.Contracts.Api;
+﻿using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Shared.Constants;
 using UniqueHabits.Shared.Helpers;
@@ -16,7 +15,7 @@ namespace UniqueHabits.Client.Services
         public HabitService(HttpClient httpClient, AuthState authState)
         {
             _httpClient = httpClient;
-            _authToken = authState.GetToken() ?? string.Empty;
+            _authToken = authState.GetToken();
         }
 
         public async Task<ApiResult<List<HabitModel>>> GetHabits()

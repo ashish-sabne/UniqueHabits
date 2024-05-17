@@ -51,5 +51,10 @@ namespace UniqueHabits.Domain.Aggregates
         {
             return new Notification(id, title, dateNotified, habitId, createdById.ToString(), notificationType);
         }
+
+        public void MarkAsRead()
+        {
+            IsRead = true;
+        }
     }
 }

@@ -18,6 +18,13 @@ namespace UnqiueHabits.Client.Helpers
             client.DefaultRequestHeaders.Authorization = new("Bearer", authToken);
             return client.PostAsJsonAsync(requestUri, value, options, cancellationToken);
         }
+
+        public static Task<HttpResponseMessage> PostWithTokenAsync(this HttpClient client, string? requestUri, 
+            string authToken, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
+        {
+            client.DefaultRequestHeaders.Authorization = new("Bearer", authToken);
+            return client.PostAsJsonAsync(requestUri, options, cancellationToken);
+        }
         
         public static Task<HttpResponseMessage> PutWithTokenAsync<TValue>(this HttpClient client, string? requestUri, 
             TValue value, string authToken, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)

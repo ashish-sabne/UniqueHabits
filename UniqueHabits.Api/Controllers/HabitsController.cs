@@ -101,8 +101,8 @@ namespace UniqueHabits.Api.Controllers
 
                 await _context.Habits.AddAsync(habit);
 
-                var reviewNotification = Notification.Create(Guid.NewGuid(), "Uour habit is due for review",
-                    DateTime.Now.AddDays(SettingConstants.SprintLengthInDays), habit.Id, _user.Id.GetValueOrDefault(), NotificationType.ReviewDue);
+                var reviewNotification = Notification.Create(Guid.NewGuid(), "Your habit is due for review",
+                    DateTime.Today.AddDays(SettingConstants.SprintLengthInDays), habit.Id, _user.Id.GetValueOrDefault(), NotificationType.ReviewDue);
 
                 await _context.Notifications.AddAsync(reviewNotification);
 

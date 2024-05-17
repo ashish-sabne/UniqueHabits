@@ -2,6 +2,6 @@
 {
     public static class SettingConstants
     {
-        public static readonly int SprintLengthInDays = 15;
+        public static readonly int SprintLengthInDays = 14;
     }
 }

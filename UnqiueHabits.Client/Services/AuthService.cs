@@ -80,7 +80,7 @@ namespace UniqueHabits.Client.Services
         {
             try
             {
-                var result = await _httpClient.PutWithTokenAsync("api/user", model, _authState.GetToken() ?? string.Empty);
+                var result = await _httpClient.PutWithTokenAsync("api/user", model, _authState.GetToken());
 
                 if (result != null)
                 {

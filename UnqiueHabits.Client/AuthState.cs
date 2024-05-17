@@ -37,9 +37,9 @@ namespace UnqiueHabits.Client
             await _localStorageService.RemoveItemsAsync(new[] {"CurrentUser", "Token"});
         }
 
-        public string? GetToken()
+        public string GetToken()
         {
-            return _syncLocalStorageService.GetItemAsString("Token");
+            return _syncLocalStorageService.GetItemAsString("Token") ?? string.Empty;
         }
 
         public bool IsAuthenticated()

@@ -14,30 +14,33 @@
                      Style="background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);">
                     <BarToggler />
                     <BarMenu>
-                        <BarEnd>
-                            @if (IsAuthenticated)
-                            {
-                                if (AuthState.CurrentUser != null)
-                                {
-                                    <BarItem>
-                                        <BarLabel>Hello, @AuthState.CurrentUser.Name</BarLabel>
-                                    </BarItem>
-                                    <BarItem>
-                                        <Blazorise.Link TextColor="TextColor.White" To="/preferences" Padding="Padding.Is3.OnX">
-                                            Preferences
-                                        </Blazorise.Link>
-                                    </BarItem>
-                                    <BarItem>
-                                        <Blazorise.Link TextColor="TextColor.White" To="javascript::void(0)"
-                                            Clicked="Logout" Padding="Padding.Is3.OnX">
-                                            Log out
-                                        </Blazorise.Link>
-                                    </BarItem>
-
-                                }
-                            }
-                            else
-                            {
+                        @if (IsAuthenticated && AuthState.CurrentUser != null)
+                        {
+                            <BarStart>
+                                <BarItem>
+                                    <BarLabel>Hello, @AuthState.CurrentUser.Name</BarLabel>
+                                </BarItem>
+                            </BarStart>
+                            <BarEnd>
+                                <BarItem>
+                                    <Notifications></Notifications>
+                                </BarItem>
+                                <BarItem>
+                                    <Blazorise.Link TextColor="TextColor.White" To="/preferences" Padding="Padding.Is3.OnX">
+                                        Preferences
+                                    </Blazorise.Link>
+                                </BarItem>
+                                <BarItem>
+                                    <Blazorise.Link TextColor="TextColor.White" To="javascript::void(0)"
+                                                    Clicked="Logout" Padding="Padding.Is3.OnX">
+                                        Log out
+                                    </Blazorise.Link>
+                                </BarItem>
+                            </BarEnd>
+                        }
+                        else
+                        {
+                            <BarEnd>
                                 <BarItem>
                                     <Blazorise.Link TextColor="TextColor.White" To="/register">
                                         Register
@@ -46,8 +49,9 @@
                                         Log in
                                     </Blazorise.Link>
                                 </BarItem>
-                            }
-                        </BarEnd>
+                            </BarEnd>
+                        }
+
                     </BarMenu>
                 </Bar>
             </LayoutHeader>
@@ -72,6 +76,7 @@
             return isAuthenticated;
         }
     }
+
     protected override void OnInitialized()
     {
         if (!IsAuthenticated)

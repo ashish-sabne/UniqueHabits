@@ -35,6 +35,13 @@ builder.Services.AddHttpClient<AuthService>(client =>
     client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Api"));
 });
 
+builder.Services.AddScoped<NotificationService>();
+
+builder.Services.AddHttpClient<NotificationService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Api"));
+});
+
 builder.Services
     .AddBlazorise(options =>
     {

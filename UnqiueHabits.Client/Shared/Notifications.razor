@@ -1,0 +1,77 @@
+﻿@inject NotificationService NotificationService
+
+<BarDropdown @ref="notificationsDropdown" RightAligned="true">
+    <BarDropdownMenu>
+        @if (MyNotifications.IsAny())
+        {
+            foreach (var notification in MyNotifications)
+            {
+                <NotificationCard Notification="notification" OnRead="MarkAsRead"></NotificationCard>
+            }
+        }
+        else
+        {
+            <BarDropdownItem>No notification available.</BarDropdownItem>
+        }
+    </BarDropdownMenu>
+</BarDropdown>
+
+<Button TextColor="TextColor.White" Background="Background.Transparent" Padding="Padding.Is0" Clicked="ShowNotifications">
+    <Icon TextColor="TextColor.White" Name="IconName.Bell"></Icon>
+    @if (unReadCount > 0)
+    {
+        <Badge TextSize="TextSize.ExtraSmall" Color="Color.Danger" TextColor="TextColor.White"
+               TextWeight="TextWeight.Bold" Pill Position="Position.Absolute" 
+               Style="right:25px; top:10px; z-index:50;">
+             @unReadCount
+         </Badge>
+    }
+</Button>
+
+
+@code {
+    BarDropdown notificationsDropdown;
+
+    List<NotificationModel> MyNotifications = new();
+    int unReadCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetNotificationDetails();
+        await base.OnInitializedAsync();
+    }
+
+    async Task ShowNotifications()
+    {
+        if (!notificationsDropdown.Visible)
+        {
+            await notificationsDropdown.Show();
+        }
+        else
+        {
+            await notificationsDropdown.Hide();
+        }
+    }
+
+    async Task GetNotificationDetails()
+    {
+        var result = await NotificationService.GetMyNotifications();
+
+        if (result.IsSuccess)
+        {
+            MyNotifications = result.Value;
+            unReadCount = MyNotifications.Count(n => !n.IsRead);
+        }
+    }
+
+    async Task MarkAsRead(Guid notiticationId)
+    {
+        var result = await NotificationService.MarkAsRead(notiticationId);
+
+        if (result.IsSuccess)
+        {
+            await GetNotificationDetails();
+            StateHasChanged();
+        }
+    }
+}
