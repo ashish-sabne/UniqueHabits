@@ -34,7 +34,7 @@ namespace UniqueHabits.Api.Controllers
             }
             try
             {
-                var notifications = _context.Notifications.Where(IsByCurrentUser).AsQueryable().ToList();
+                var notifications = _context.Notifications.Where(GetAllUnreadByCurrentUser).AsQueryable().ToList();
 
                 if (notifications == null || !notifications.Any())
                 {
@@ -53,7 +53,7 @@ namespace UniqueHabits.Api.Controllers
         [HttpPost("{notificationId}/mark-as-read")]
         public async Task<IActionResult> MarkAsRead([FromRoute] Guid notificationId)
         {
-            var notification = _context.Notifications.Where(IsByCurrentUser).AsQueryable()
+            var notification = _context.Notifications.Where(GetAllUnreadByCurrentUser).AsQueryable()
                         .FirstOrDefault(n => n.Id == notificationId);
 
             if (notification == null)
@@ -70,10 +70,11 @@ namespace UniqueHabits.Api.Controllers
         }
 
 
-        private bool IsByCurrentUser(Notification notification)
+        private bool GetAllUnreadByCurrentUser(Notification notification)
         {
             return notification.CreatedById != null 
-                && notification.CreatedById.ToLower() == _user.Id.GetValueOrDefault().ToString().ToLower();
+                && notification.CreatedById.ToLower() == _user.Id.GetValueOrDefault().ToString().ToLower()
+                && notification.DateNotified <= DateTime.Today;
         }
     }
 }
