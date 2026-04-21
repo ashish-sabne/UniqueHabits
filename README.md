@@ -1,0 +1,1 @@
+A Progressive Web Application (PWA) for habit tracking and improvement, combining leading strategies in habit formation and Agile software development using Blazor Web Assembly, .NET Web API, EF Core and SQL Server
