@@ -1,10 +1,10 @@
 {
-  "name": "UnqiueHabits.Client",
-  "short_name": "UnqiueHabits.Client",
+  "name": "Hi-bits - Improve your habits one step at a time!",
+  "short_name": "Hi-bits",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#03173d",
+  "theme_color": "#0288D1",
   "prefer_related_applications": false,
   "icons": [
     {
