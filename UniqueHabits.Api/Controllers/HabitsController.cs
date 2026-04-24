@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using UniqueHabits.Api.Queries;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Data;
 using UniqueHabits.Domain.Aggregates;
@@ -21,33 +23,27 @@ namespace UniqueHabits.Api.Controllers
         private readonly HabitsContext _context;
         private readonly IMapper _mapper;
         private readonly IUser _user;
-        public HabitsController(HabitsContext context, IMapper mapper, IUser user)
+        private readonly IMediator _mediator;
+        public HabitsController(HabitsContext context, IMapper mapper, IUser user, IMediator mediator)
         {
             _context = context;
             _mapper = mapper;
             _user = user;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetHabits()
         {
-            try
-            {
-                var habits = _context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps)
-                                    .Where(IsByCurrentUser).AsQueryable().ToList();
+            // The mediator sends the query to the correct handler automatically
+            var result = await _mediator.Send(new HabitListQuery());
 
-                if (habits == null || !habits.Any())
-                {
-                    return NotFound();
-                }
-                var models = _mapper.Map<List<HabitModel>>(habits);
-
-                return Ok(models);
-            }
-            catch (Exception ex)
+            if (result == null || !result.Any())
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+                return NotFound();
             }
+
+            return Ok(result);
         }
 
         private bool IsByCurrentUser(Habit habit)
