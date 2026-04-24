@@ -11,7 +11,7 @@ using UniqueHabits.Shared.User;
 
 namespace UniqueHabits.Api.QueryHandlers
 {
-    public class HabitListQueryHandler : HabitQueryCommandHandlerBase<HabitListQuery, List<HabitModel>>
+    public class HabitListQueryHandler : HabitQueryHandlerBase<HabitListQuery, List<HabitModel>>
     {
         private readonly HabitsContext _context;
         private readonly IMapper _mapper;

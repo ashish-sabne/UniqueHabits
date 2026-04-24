@@ -6,5 +6,10 @@
         {
             return guid == null || guid.GetValueOrDefault() == Guid.Empty;
         }
+        
+        public static bool IsEmpty(this Guid guid)
+        {
+            return guid == Guid.Empty;
+        }
     }
 }
