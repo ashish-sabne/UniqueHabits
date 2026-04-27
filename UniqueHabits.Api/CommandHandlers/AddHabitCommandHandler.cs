@@ -31,6 +31,9 @@ namespace UniqueHabits.Api.CommandHandlers
 
             try
             {
+                if (await _context.Habits.FindAsync(habitModel.Id, cancellationToken) != null)
+                    return null;
+
                 var habit = Habit.Create(habitModel.Id, habitModel.SystemName, habitModel.MeasurableResult, habitModel.Why,
                     habitModel.StartDate, habitModel.Category.GetValueOrDefault(), habitModel.CategoryDescription,
                     _user.Id.GetValueOrDefault());

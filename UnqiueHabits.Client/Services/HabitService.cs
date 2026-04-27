@@ -18,11 +18,11 @@ namespace UniqueHabits.Client.Services
             _authToken = authState.GetToken();
         }
 
-        public async Task<ApiResult<List<HabitModel>>> GetHabits()
+        public async Task<ApiResult<List<HabitModel>>> GetHabits(CancellationToken ct = default)
         {
             try
             {
-                var habits = await _httpClient.GetWithTokenAsync<List<HabitModel>>("api/habits", _authToken);
+                var habits = await _httpClient.GetWithTokenAsync<List<HabitModel>>("api/habits", _authToken, ct);
                 if (habits.IsAny())
                 {
                     return ApiResult<List<HabitModel>>.Success(habits);
@@ -35,6 +35,12 @@ namespace UniqueHabits.Client.Services
                 {
                     return ApiResult<List<HabitModel>>.Failure();
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                // This is a "clean" exit—the user just moved away. 
+                // You can return a silent failure or just let it bubble up.
+                return ApiResult<List<HabitModel>>.Failure("Request was cancelled.");
             }
             catch (Exception ex)
             {

@@ -40,6 +40,8 @@
 
     [Inject] AuthState AuthState { get; set; }
 
+    private CancellationTokenSource _cts = new();
+
     protected override async Task OnInitializedAsync()
     {
         if (!(AuthState?.IsAuthenticated() ?? false))
@@ -48,7 +50,7 @@
             return;
         }
         showLoading = true;
-        var result = await HabitService.GetHabits();
+        var result = await HabitService.GetHabits(_cts.Token);
         showLoading = false;
 
         if (result.IsSuccess)

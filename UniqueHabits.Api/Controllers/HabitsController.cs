@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using UniqueHabits.Api.Commands;
 using UniqueHabits.Api.Queries;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Data;
@@ -33,17 +34,24 @@ namespace UniqueHabits.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetHabits()
+        public async Task<IActionResult> GetHabits(CancellationToken ct)
         {
-            // The mediator sends the query to the correct handler automatically
-            var result = await _mediator.Send(new HabitListQuery());
-
-            if (result == null || !result.Any())
+            try
             {
-                return NotFound();
-            }
+                // The mediator sends the query to the correct handler automatically
+                var result = await _mediator.Send(new HabitListQuery(), ct);
 
-            return Ok(result);
+                if (result == null || !result.Any())
+                {
+                    return NotFound();
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, ex);
+            }
         }
 
         private bool IsByCurrentUser(Habit habit)
@@ -52,21 +60,18 @@ namespace UniqueHabits.Api.Controllers
         }
 
         [HttpGet("{habitId}")]
-        public async Task<IActionResult> GetHabit(Guid habitId)
+        public async Task<IActionResult> GetHabit(Guid habitId, CancellationToken ct)
         {
             try
             {
-                var habit = _context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps)
-                        .Where(IsByCurrentUser).AsQueryable()
-                        .FirstOrDefault(h => h.Id == habitId);
+                var result = await _mediator.Send(new HabitDetailsQuery(), ct);
 
-                if (habit == null)
+                if (result == null)
                 {
                     return NotFound();
                 }
-                var model = _mapper.Map<HabitModel>(habit);
 
-                return Ok(model);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -75,34 +80,16 @@ namespace UniqueHabits.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddHabit([FromBody] HabitModel habitModel)
+        public async Task<IActionResult> AddHabit([FromBody] HabitModel habitModel, CancellationToken ct)
         {
-            if (await _context.Habits.FindAsync(habitModel.Id) != null)
-            {  return BadRequest(); }
-
             try
             {
-                var habit = Habit.Create(habitModel.Id, habitModel.SystemName, habitModel.MeasurableResult, habitModel.Why, 
-                    habitModel.StartDate,habitModel.Category.GetValueOrDefault(), habitModel.CategoryDescription, 
-                    _user.Id.GetValueOrDefault());
+                var result = await _mediator.Send(new AddHabitCommand() { Habit = habitModel }, ct);
 
-                var steps = habitModel.ImplementationDetails.Steps.Select(s => 
-                ImplementationStep.Create(s.Id, s.Step, s.Sequence)).ToList();
-
-                var implementation = Implementation.Create(habitModel.ImplementationDetails.Id, habitModel.Id, 
-                    habitModel.ImplementationDetails.WithWhat,habitModel.ImplementationDetails.When, 
-                    habitModel.ImplementationDetails.Where, habitModel.ImplementationDetails.WithWhom, steps);
-
-                habit.AddImplementation(implementation);
-
-                await _context.Habits.AddAsync(habit);
-
-                var reviewNotification = Notification.Create(Guid.NewGuid(), "Your habit is due for review",
-                    DateTime.Today.AddDays(SettingConstants.SprintLengthInDays), habit.Id, _user.Id.GetValueOrDefault(), NotificationType.ReviewDue);
-
-                await _context.Notifications.AddAsync(reviewNotification);
-
-                await _context.SaveChangesAsync();
+                if (result == null)
+                {
+                    return NotFound();
+                }
                 return Ok();
             }
             catch (Exception ex)
