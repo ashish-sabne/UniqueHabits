@@ -66,7 +66,7 @@ builder.Services.AddSwaggerGen(options =>
     options.DescribeAllParametersInCamelCase();
 });
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 
 builder.Services.AddMediatR(cfg => {
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
