@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using UniqueHabits.Shared.Enums;
+using UniqueHabits.Shared.User;
 
 namespace UniqueHabits.Domain.Aggregates
 {
@@ -42,6 +43,11 @@ namespace UniqueHabits.Domain.Aggregates
         public void AddImplementation(Implementation implementation)
         {
             Implementations.Add(implementation);
+        }
+
+        public bool IsByCurrentUser(string userId)
+        {
+            return CreatedById != null && CreatedById.ToLower() == userId.ToLower();
         }
     }
 }
