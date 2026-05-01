@@ -12,10 +12,10 @@ namespace UniqueHabits.Contracts.Validators
             RuleFor(m => m.LastName).MaximumLength(20);
             RuleFor(m => m.Email).NotEmpty().EmailAddress();
             RuleFor(m => m.Password).NotEmpty()
-                .Must(HasUppercase).WithMessage("Password must contain at least one uppercase letter")
+                /*.Must(HasUppercase).WithMessage("Password must contain at least one uppercase letter")
                 .Must(HasLowercase).WithMessage("Password must contain at least one lowercase letter")
                 .Must(HasDigit).WithMessage("Password must contain at least one number")
-                .Must(HasSpecialCharacter).WithMessage("Password must contain at least one special character");
+                .Must(HasSpecialCharacter).WithMessage("Password must contain at least one special character")*/;
             RuleFor(m => m.ConfirmPassword).NotEmpty().Equal(m => m.Password).WithMessage("Password and confirm password do not match");
         }
 

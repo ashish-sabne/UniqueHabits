@@ -1,6 +1,6 @@
 ﻿using UniqueHabits.Contracts.Models;
 
-namespace UnqiueHabits.Client
+namespace UniqueHabits.Client
 {
     public class HabitState
     {

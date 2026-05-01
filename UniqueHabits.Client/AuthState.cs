@@ -1,7 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using UniqueHabits.Contracts.Models;
 
-namespace UnqiueHabits.Client
+namespace UniqueHabits.Client
 {
     public class AuthState
     {

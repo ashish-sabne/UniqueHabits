@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Json;
 using UniqueHabits.Contracts.Api;
 using UniqueHabits.Contracts.Models;
-using UnqiueHabits.Client;
-using UnqiueHabits.Client.Helpers;
+using UniqueHabits.Client;
+using UniqueHabits.Client.Helpers;
 
 namespace UniqueHabits.Client.Services
 {

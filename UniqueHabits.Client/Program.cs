@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using UniqueHabits.Client.Services;
 using UniqueHabits.Contracts.Validators;
-using UnqiueHabits.Client;
+using UniqueHabits.Client;
+using UniqueHabits.Contracts.Models;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -20,7 +21,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<HabitState>();
-builder.Services.AddScoped<HabitService>();
+//builder.Services.AddScoped<HabitService>();
 
 builder.Services.AddHttpClient<HabitService>(client =>
 {
@@ -42,16 +43,22 @@ builder.Services.AddHttpClient<NotificationService>(client =>
     client.BaseAddress = new Uri(builder.Configuration.GetValue<string>("Api"));
 });
 
+builder.Services.AddValidatorsFromAssembly(typeof(HabitValidator).Assembly);
+
 builder.Services
     .AddBlazorise(options =>
     {
         options.Immediate = true;
     })
     .AddMaterialProviders()
-    .AddMaterialIcons()
-    .AddBlazoriseFluentValidation()
-    .AddValidatorsFromAssembly(typeof(HabitValidator).Assembly);
+    .AddMaterialIcons();
+
+builder.Services.AddBlazoriseFluentValidation();
+
+//builder.Services.AddScoped<IValidator<RegisterModel>, RegisterValidator>();
 
 builder.Services.AddNotifications();
+
+
 
 await builder.Build().RunAsync();
