@@ -2,8 +2,8 @@
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Shared.Constants;
 using UniqueHabits.Shared.Helpers;
-using UnqiueHabits.Client;
-using UnqiueHabits.Client.Helpers;
+using UniqueHabits.Client;
+using UniqueHabits.Client.Helpers;
 
 namespace UniqueHabits.Client.Services
 {

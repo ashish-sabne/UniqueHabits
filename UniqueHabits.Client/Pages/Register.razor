@@ -67,14 +67,12 @@
                     </Field>
                 </Validation>
 
-                <Validation>
-                    <Field ColumnSize="ColumnSize.IsFull">
-                        <FieldBody>
-                            <Switch TValue="bool" Checked="@model.EnableNotifications"
-                                    CheckedChanged="@OnEnableNotificationsChanged">Enable Notifications</Switch>
-                        </FieldBody>
-                    </Field>
-                </Validation>
+                <Field ColumnSize="ColumnSize.IsFull">
+                    <FieldBody>
+                        <Switch TValue="bool" Checked="@model.EnableNotifications"
+                                CheckedChanged="@OnEnableNotificationsChanged">Enable Notifications</Switch>
+                    </FieldBody>
+                </Field>
 
                 <Field ColumnSize="ColumnSize.IsFull">
                     <Button Color="Color.Primary" Type="ButtonType.Submit" Float="Float.End" Margin="Margin.Is2">Submit</Button>
@@ -115,6 +113,7 @@
 
     private async Task RegisterUser()
     {
+        await fluentValidations.ClearAll();
         if (await fluentValidations.ValidateAll())
         {
             var result = await AuthService.Register(model);

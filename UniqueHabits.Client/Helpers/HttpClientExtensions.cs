@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace UnqiueHabits.Client.Helpers
+namespace UniqueHabits.Client.Helpers
 {
     public static class HttpClientExtensions
     {
