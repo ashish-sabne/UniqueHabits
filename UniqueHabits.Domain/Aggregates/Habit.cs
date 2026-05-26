@@ -47,7 +47,9 @@ namespace UniqueHabits.Domain.Aggregates
 
         public bool IsByCurrentUser(string userId)
         {
-           return !string.IsNullOrEmpty(userId) && CreatedById != null && CreatedById.ToLower() == userId.ToLower();
+            return !string.IsNullOrWhiteSpace(CreatedById) &&
+            !string.IsNullOrWhiteSpace(userId) &&
+            string.Equals(CreatedById, userId, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
