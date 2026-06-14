@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -16,7 +17,7 @@ namespace UniqueHabits.Api.QueryHandlers
         private readonly HabitsContext _context;
         private readonly IMapper _mapper;
         private readonly IUser _user;
-        
+
         public HabitListQueryHandler(HabitsContext context, IMapper mapper, IUser user) : base(user)
         {
             _context = context;
@@ -28,16 +29,12 @@ namespace UniqueHabits.Api.QueryHandlers
         {
             try
             {
-                var habits = _context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps)
-                                    .Where(IsByCurrentUser).AsQueryable().ToList();
+                var habits = await _context.Habits
+                        .Where(h => IsByCurrentUser.Compile()(h.CreatedById)) // Built-in C# evaluation
+                        .ProjectTo<HabitModel>(_mapper.ConfigurationProvider)
+                        .ToListAsync(cancellationToken);
 
-                if (habits == null || !habits.Any())
-                {
-                    return null;
-                }
-                var models = _mapper.Map<List<HabitModel>>(habits);
-
-                return models;
+                return habits ?? new List<HabitModel>();
             }
             catch (Exception ex)
             {

@@ -64,7 +64,10 @@ namespace UniqueHabits.Api.Controllers
         {
             try
             {
-                var result = await _mediator.Send(new HabitDetailsQuery(), ct);
+                var result = await _mediator.Send(new HabitDetailsQuery()
+                {
+                    HabitId = habitId
+                }, ct);
 
                 if (result == null)
                 {

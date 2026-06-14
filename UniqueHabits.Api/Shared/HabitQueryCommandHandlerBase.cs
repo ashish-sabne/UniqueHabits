@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System.Linq.Expressions;
 using UniqueHabits.Domain.Aggregates;
 using UniqueHabits.Shared.User;
 
@@ -13,10 +14,8 @@ namespace UniqueHabits.Api.Shared
             _user = user;
         }
 
-        protected bool IsByCurrentUser(Habit habit)
-        {
-            return habit.CreatedById != null && habit.CreatedById.ToLower() == _user.Id.GetValueOrDefault().ToString().ToLower();
-        }
+        protected Expression<Func<string, bool>> IsByCurrentUser =>
+        id => id != null && id == _user.Id.GetValueOrDefault().ToString();
     }
     
     public abstract class HabitQueryHandlerBase<TRequest, TResponse> : HabitQueryCommandHandlerBase, IRequestHandler<TRequest, TResponse>

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -28,17 +29,12 @@ namespace UniqueHabits.Api.QueryHandlers
         {
             try
             {
-                var habit = _context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps)
-                        .Where(IsByCurrentUser).AsQueryable()
-                        .FirstOrDefault(h => h.Id == request.HabitId);
-
-                if (habit == null)
-                {
-                    return null;
-                }
-                var model = _mapper.Map<HabitModel>(habit);
-
-                return model;
+                return await _context.Habits
+                .Where(h => h.Id == request.HabitId)
+                .Where(h => IsByCurrentUser.Compile()(h.CreatedById)) // Built-in C# evaluation
+                                                                             // Better yet, apply it directly to the entity if you update the expression type:
+                .ProjectTo<HabitModel>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
             }
             catch (Exception ex)
             {
