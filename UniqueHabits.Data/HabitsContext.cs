@@ -5,13 +5,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UniqueHabits.Data.Seed;
 using UniqueHabits.Domain.Aggregates;
 using UniqueHabits.Shared.Enums;
+using UniqueHabits.Shared.User;
 
 namespace UniqueHabits.Data
 {
     public class HabitsContext : IdentityDbContext<AppUser>
     {
-        public HabitsContext(DbContextOptions<HabitsContext> options) : base(options)
+        private readonly IUser _user;
+
+        public HabitsContext(DbContextOptions<HabitsContext> options, IUser user) : base(options)
         {
+            _user = user;
         }
 
         public DbSet<Habit> Habits { get; set; }
@@ -25,6 +29,10 @@ namespace UniqueHabits.Data
             modelBuilder.Entity<Habit>().HasMany(h => h.Implementations).WithOne(i => i.Habit).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Habit>().Property(h => h.Category)
                 .HasConversion(new EnumToStringConverter<HabitCategory>());
+
+            modelBuilder.Entity<Habit>()
+            .HasQueryFilter(h =>
+                h.CreatedById == _user.Id.GetValueOrDefault().ToString());
 
             modelBuilder.Entity<Implementation>().Property(h => h.CustomizationCategory)
                 .HasConversion(new EnumToStringConverter<CustomizationCategory>());

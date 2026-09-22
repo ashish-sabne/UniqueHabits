@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using UniqueHabits.Contracts.Models;
 
-namespace UniqueHabits.Api.Queries
+namespace UniqueHabits.Contracts.Queries
 {
     public class HabitDetailsQuery : IRequest<HabitModel>
     {

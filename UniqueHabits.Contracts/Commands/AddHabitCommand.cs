@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using UniqueHabits.Contracts.Models;
 
-namespace UniqueHabits.Api.Commands
+namespace UniqueHabits.Contracts.Commands
 {
     public class AddHabitCommand : IRequest<HabitModel>
     {

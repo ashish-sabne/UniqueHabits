@@ -1,14 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using UniqueHabits.Api.Commands;
-using UniqueHabits.Api.Shared;
-using UniqueHabits.Contracts.Api;
+﻿using UniqueHabits.Api.Shared;
+using UniqueHabits.Contracts.Commands;
 using UniqueHabits.Contracts.Models;
 using UniqueHabits.Data;
 using UniqueHabits.Domain.Aggregates;
 using UniqueHabits.Shared.Constants;
 using UniqueHabits.Shared.Enums;
-using UniqueHabits.Shared.User;
 using UniqueHabits.Shared.Helpers;
+using UniqueHabits.Shared.User;
 
 namespace UniqueHabits.Api.CommandHandlers
 {
