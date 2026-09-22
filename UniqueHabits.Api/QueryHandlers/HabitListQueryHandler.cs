@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
-using UniqueHabits.Api.Queries;
 using UniqueHabits.Api.Shared;
 using UniqueHabits.Contracts.Models;
+using UniqueHabits.Contracts.Queries;
 using UniqueHabits.Data;
-using UniqueHabits.Domain.Aggregates;
 using UniqueHabits.Shared.User;
 
 namespace UniqueHabits.Api.QueryHandlers
@@ -29,12 +26,15 @@ namespace UniqueHabits.Api.QueryHandlers
         {
             try
             {
-                var habits = await _context.Habits
-                        .Where(h => IsByCurrentUser.Compile()(h.CreatedById)) // Built-in C# evaluation
-                        .ProjectTo<HabitModel>(_mapper.ConfigurationProvider)
-                        .ToListAsync(cancellationToken);
+                var habitsQueryable =_context.Habits.Include(h => h.Implementations).ThenInclude(i => i.Steps);
 
-                return habits ?? new List<HabitModel>();
+                var query = habitsQueryable.ToQueryString();
+
+                var habits = await habitsQueryable.ToListAsync(cancellationToken);
+
+                return _mapper.Map<List<HabitModel>>(habits);
+
+                //return await habitsQueryable.ProjectTo<HabitModel>(_mapper.ConfigurationProvider).ToListAsync();
             }
             catch (Exception ex)
             {

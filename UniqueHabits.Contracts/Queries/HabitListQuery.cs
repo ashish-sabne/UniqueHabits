@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using UniqueHabits.Contracts.Models;
 
-namespace UniqueHabits.Api.Queries
+namespace UniqueHabits.Contracts.Queries
 {
     public class HabitListQuery : IRequest<List<HabitModel>>
     {

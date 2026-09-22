@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using UniqueHabits.Shared.Enums;
-using UniqueHabits.Shared.User;
 
 namespace UniqueHabits.Domain.Aggregates
 {
